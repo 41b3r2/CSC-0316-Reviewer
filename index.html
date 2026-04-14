@@ -42,7 +42,7 @@
 html{font-size:clamp(18px,1vw + 15px,21px)}
 body{font-family:"Segoe UI",Inter,system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;font-size:1.1rem;line-height:1.75;background:linear-gradient(180deg,var(--page-bg),var(--page-bg-2));color:var(--text-primary);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;transition:background .2s ease,color .2s ease}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.reviewer{max-width:1180px;margin:0 auto;padding:1rem 1rem 1.5rem}
+.reviewer{max-width:1180px;margin:0 auto;padding:1rem 1rem 1.5rem;zoom:1.1}
 .reviewer-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;background:linear-gradient(135deg,var(--card-bg),var(--card-bg-soft));border:1px solid var(--border);border-radius:calc(var(--border-radius-lg) + 2px);padding:1rem 1.1rem;margin-bottom:1rem;box-shadow:0 8px 24px rgba(0,0,0,.08)}
 .reviewer-header h2{font-size:clamp(1.5rem,1.4vw + 1rem,2rem);line-height:1.3;margin-bottom:.25rem;color:var(--text-primary);font-weight:700}
 .reviewer-header p{font-size:clamp(1.15rem,.8vw + .9rem,1.35rem);line-height:1.8;color:var(--text-secondary);max-width:60ch}
@@ -108,29 +108,29 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:1024px){
   .reviewer{padding:.8rem}
-  .card-title{font-size:19px}
-  .term,.compare-cell,.list-item,.acro,.quiz-q,.quiz-feedback,.quiz-stats,.quiz-note,.quiz-score{font-size:18px}
+  .card-title{font-size:20px}
+  .term,.compare-cell,.list-item,.acro,.quiz-q,.quiz-feedback,.quiz-stats,.quiz-note,.quiz-score{font-size:19px}
 }
 @media(max-width:760px){
-  html{font-size:20px}
-  body{font-size:1.1rem;line-height:1.9}
+  html{font-size:21px}
+  body{font-size:1.38rem;line-height:1.95}
   .reviewer{padding:.65rem}
   .reviewer-header{flex-direction:column;padding:.95rem .95rem}
-  .reviewer-header h2{font-size:1.95rem}
-  .reviewer-header p{font-size:1.45rem;line-height:1.95}
+  .reviewer-header h2{font-size:2.52rem}
+  .reviewer-header p{font-size:1.86rem;line-height:2}
   .header-actions{justify-content:flex-start}
-  .header-chip,.theme-toggle{font-size:17px;padding:.65rem 1rem}
+  .header-chip,.theme-toggle{font-size:22px;padding:.84rem 1.26rem}
   .tabs{top:.5rem;padding:.5rem}
-  .tab{font-size:18px;padding:.9rem 1.15rem}
+  .tab{font-size:22px;padding:1.14rem 1.44rem}
   .card{padding:.95rem 1rem}
-  .card-title{font-size:20px}
-  .term,.compare-cell,.list-item,.acro,.quiz-q,.quiz-feedback,.quiz-stats,.quiz-note,.quiz-score{font-size:20px;line-height:1.95}
-  .quiz-btn{font-size:19px;padding:.9rem 1.2rem}
+  .card-title{font-size:25px}
+  .term,.compare-cell,.list-item,.acro,.quiz-q,.quiz-feedback,.quiz-stats,.quiz-note,.quiz-score{font-size:25px;line-height:2}
+  .quiz-btn{font-size:24px;padding:1.14rem 1.5rem}
   .term{flex-direction:column;gap:2px}
   .term-label{min-width:unset}
-  .compare-head{font-size:19px}
-  .quiz-choice span{font-size:20px;line-height:1.8}
-  .quiz-choice{padding:.95rem 1rem}
+  .compare-head{font-size:24px}
+  .quiz-choice span{font-size:25px;line-height:1.85}
+  .quiz-choice{padding:1.2rem 1.26rem}
 }
 @media(prefers-reduced-motion:reduce){.section,.tab{animation:none;transition:none}.tab:hover{transform:none}}
 </style>
