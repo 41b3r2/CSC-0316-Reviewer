@@ -79,6 +79,30 @@ body{font-family:"Segoe UI",Inter,system-ui,-apple-system,BlinkMacSystemFont,"He
 .list-item{font-size:14px;color:var(--text-secondary);padding:.38rem 0;line-height:1.65;border-bottom:1px solid var(--border)}
 .list-item:last-child{border-bottom:none}
 .list-item strong{color:var(--text-primary)}
+.quiz-meta{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.9rem}
+.quiz-stats{font-size:13px;color:var(--text-secondary)}
+.quiz-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.quiz-btn{font:inherit;font-size:13px;font-weight:700;padding:.6rem .9rem;border-radius:999px;border:1px solid var(--border-strong);cursor:pointer;background:var(--card-bg-soft);color:var(--text-primary);transition:transform .15s ease,box-shadow .15s ease,background .15s ease,border-color .15s ease}
+.quiz-btn:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.08)}
+.quiz-btn:focus-visible{outline:2px solid var(--info-text);outline-offset:2px}
+.quiz-btn.primary{background:var(--info-bg);color:var(--info-text)}
+.quiz-score{margin-bottom:1rem;padding:.85rem 1rem;border-radius:var(--border-radius-md);border:1px solid var(--border);background:var(--card-bg-soft);color:var(--text-primary);font-weight:700;display:none}
+.quiz-score.show{display:block}
+.quiz-note{margin-top:.35rem;font-size:13px;font-weight:600;color:var(--text-secondary)}
+.quiz-list{display:grid;gap:.9rem}
+.quiz-item{border:1px solid var(--border);border-radius:var(--border-radius-lg);background:var(--card-bg);padding:1rem}
+.quiz-item.correct{border-color:var(--success-text);box-shadow:0 0 0 1px rgba(0,0,0,0)}
+.quiz-item.wrong{border-color:var(--danger-text)}
+.quiz-q{font-size:14px;font-weight:700;color:var(--text-primary);line-height:1.5;margin-bottom:.75rem}
+.quiz-choices{display:grid;gap:.45rem}
+.quiz-choice{display:flex;align-items:flex-start;gap:.55rem;padding:.6rem .7rem;border:1px solid var(--border);border-radius:var(--border-radius-md);background:var(--card-bg-soft);cursor:pointer;transition:background .15s ease,border-color .15s ease}
+.quiz-choice:hover{border-color:var(--border-strong)}
+.quiz-choice input{margin-top:.15rem;accent-color:var(--info-text)}
+.quiz-choice span{color:var(--text-secondary);line-height:1.45}
+.quiz-choice.correct{border-color:var(--success-text);background:var(--success-bg)}
+.quiz-choice.wrong{border-color:var(--danger-text);background:var(--danger-bg)}
+.quiz-feedback{margin-top:.75rem;font-size:13px;line-height:1.55;color:var(--text-secondary)}
+.quiz-feedback strong{color:var(--text-primary)}
 h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;margin:.85rem 0 .55rem}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:760px){.reviewer{padding:.75rem}.reviewer-header{flex-direction:column}.header-actions{justify-content:flex-start}.header-chip{align-self:flex-start}.tabs{top:.5rem}.two-col,.compare-row{grid-template-columns:1fr}.term{flex-direction:column;gap:2px}.term-label{min-width:unset}}
@@ -105,6 +129,7 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
   <button class="tab" onclick="show(event, 'mod7-assess')">Module 7: Assessment</button>
   <button class="tab" onclick="show(event, 'mod7-pentest')">Pentest & Teams</button>
   <button class="tab" onclick="show(event, 'mod7-audit')">Audit & Output</button>
+  <button class="tab" onclick="show(event, 'quiz')">Quiz 50 Items</button>
   <button class="tab" onclick="show(event, 'acros')">Acronyms</button>
 </div>
 
@@ -468,6 +493,21 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
   </div>
 </div>
 
+<div id="quiz" class="section">
+  <div class="card">
+    <div class="card-title">Module 6 and 7 Quiz — 50 Items</div>
+    <div class="quiz-meta">
+      <div class="quiz-stats" id="quizStats">50 multiple-choice items. Answer first, then check your score.</div>
+      <div class="quiz-actions">
+        <button class="quiz-btn primary" type="button" id="checkQuizBtn">Check Answers & Reveal Score</button>
+        <button class="quiz-btn" type="button" id="shuffleQuizBtn">Shuffle Quiz</button>
+      </div>
+    </div>
+    <div class="quiz-score" id="quizScore"></div>
+    <div class="quiz-list" id="quizList"></div>
+  </div>
+</div>
+
 <div id="acros" class="section">
   <div class="card">
     <div class="card-title">Module 6 Acronyms</div>
@@ -523,6 +563,164 @@ function show(evt, id){
   evt.currentTarget.classList.add('active');
 }
 
+const quizData = [
+  { q: 'What does IAM stand for?', choices: ['Identity and Access Management', 'Integrated Access Matrix', 'Internet Authentication Model', 'Identity Audit Module'], answer: 0 },
+  { q: 'Which core IAM component proves who you are?', choices: ['Authorization', 'Accounting', 'Authentication', 'Auditing'], answer: 2 },
+  { q: 'Which 4A tracks what you did?', choices: ['Identity', 'Authentication', 'Accounting/Auditing', 'Authorization'], answer: 2 },
+  { q: 'Rule-Based Access Control is abbreviated as:', choices: ['RBAC', 'RuBAC', 'ABAC', 'CBAC'], answer: 1 },
+  { q: 'Attribute-Based Access Control is abbreviated as:', choices: ['ABAC', 'RBAC', 'RuBAC', 'PBAC'], answer: 0 },
+  { q: 'Which access model makes decisions based on user, resource, and environment attributes?', choices: ['ABAC', 'RuBAC', 'MAC', 'DAC'], answer: 0 },
+  { q: 'What does PEP do?', choices: ['Defines policies', 'Provides attribute data', 'Interprets logs', 'Intercepts requests and enforces policies'], answer: 3 },
+  { q: 'What does PDP do?', choices: ['Evaluates policies and makes allow/deny decisions', 'Provides identity proof', 'Stores credentials', 'Creates sessions'], answer: 0 },
+  { q: 'What does PIP do?', choices: ['Administers policies', 'Provides attribute information to PDPs', 'Issues session IDs', 'Protects identity proofs'], answer: 1 },
+  { q: 'What does PAP do?', choices: ['Provides audit logs', 'Administers policies', 'Protects passwords', 'Provisions users'], answer: 1 },
+  { q: 'Provisioning means:', choices: ['Removing access', 'Adding a user and granting access', 'Changing a password only', 'Locking a device'], answer: 1 },
+  { q: 'Deprovisioning means:', choices: ['Granting access temporarily', 'Creating a service account', 'Removing a user and revoking access', 'Auditing logs'], answer: 2 },
+  { q: 'Privilege creep means:', choices: ['Users lose all privileges', 'Users accumulate excess access rights over time', 'Passwords are rotated too often', 'An account is auto-locked'], answer: 1 },
+  { q: 'Service accounts are also called:', choices: ['Guest accounts', 'Application accounts', 'Admin vaults', 'Identity tokens'], answer: 1 },
+  { q: 'Which statement best describes SSO?', choices: ['Temporary access only', 'Authenticate once and access multiple services', 'Authentication only inside one app', 'Encrypt all traffic'], answer: 1 },
+  { q: 'JIT access means:', choices: ['Permanent admin access', 'Temporary access granted only when needed', 'A ticketing system', 'A type of password manager'], answer: 1 },
+  { q: 'OAuth 2.0 is mainly for:', choices: ['Authentication only', 'Authorization only', 'Encryption only', 'Biometric scanning'], answer: 1 },
+  { q: 'OpenID is mainly for:', choices: ['Authentication only', 'Authorization only', 'Accounting only', 'Auditing only'], answer: 0 },
+  { q: 'OIDC is:', choices: ['A replacement for SAML', 'Authentication layer on top of OAuth 2.0', 'A firewall protocol', 'A vulnerability scoring tool'], answer: 1 },
+  { q: 'SAML is based on:', choices: ['XML', 'JSON', 'CSV', 'YAML'], answer: 0 },
+  { q: 'In Kerberos, the trusted third party is the:', choices: ['PDP', 'KDC', 'SP', 'PIP'], answer: 1 },
+  { q: 'TGT stands for:', choices: ['Ticket Grant Tool', 'Ticket-Granting Ticket', 'Trusted Gate Token', 'Temporary Grant Token'], answer: 1 },
+  { q: 'RADIUS uses:', choices: ['TCP port 49', 'UDP', 'HTTP only', 'SSH'], answer: 1 },
+  { q: 'TACACS+ uses:', choices: ['UDP', 'TCP port 49', 'ICMP', 'TLS port 443'], answer: 1 },
+  { q: 'TACACS+ compared with RADIUS is generally:', choices: ['Less secure because it encrypts nothing', 'More secure because it encrypts all authentication info by default', 'Only for local accounts', 'Not used in networks'], answer: 1 },
+  { q: 'Security testing mainly:', choices: ['Replaces audits', 'Verifies controls are functioning properly', 'Creates new policies', 'Deletes vulnerabilities automatically'], answer: 1 },
+  { q: 'Security assessment is:', choices: ['Only a password check', 'A comprehensive review beyond testing', 'A hardware inventory', 'A log archive'], answer: 1 },
+  { q: 'Security audit is usually done by:', choices: ['Independent auditors', 'Only system admins', 'End users', 'The attackers'], answer: 0 },
+  { q: 'Black box penetration testing means:', choices: ['Full source-code access', 'Partial knowledge', 'Zero knowledge of the system', 'Only physical access'], answer: 2 },
+  { q: 'White box penetration testing means:', choices: ['Zero knowledge', 'Partial knowledge', 'Full knowledge', 'No testing allowed'], answer: 2 },
+  { q: 'Gray box penetration testing means:', choices: ['Full knowledge', 'Zero knowledge', 'Partial knowledge', 'Only malware analysis'], answer: 2 },
+  { q: 'Red team is the:', choices: ['Defensive team', 'Offensive team', 'Audit team', 'Support team'], answer: 1 },
+  { q: 'Blue team is the:', choices: ['Offensive team', 'Defensive team', 'Penalty team', 'Redundant team'], answer: 1 },
+  { q: 'Purple team means:', choices: ['No teamwork', 'Collaboration between red and blue teams', 'Only blue team operations', 'Only physical security'], answer: 1 },
+  { q: 'SCAP stands for:', choices: ['Security Content Automation Protocol', 'Secure Cloud Access Program', 'System Control Audit Process', 'Security Center Access Policy'], answer: 0 },
+  { q: 'CVE stands for:', choices: ['Common Vulnerabilities and Exposures', 'Critical Verification Engine', 'Cyber Vulnerability Entry', 'Control Validation Event'], answer: 0 },
+  { q: 'CVSS stands for:', choices: ['Common Vulnerability Scoring System', 'Critical Vulnerability Security Standard', 'Cyber Validation Severity Scale', 'Control Verification Score Sheet'], answer: 0 },
+  { q: 'A vulnerability assessment primarily:', choices: ['Creates user accounts', 'Discovers system weaknesses', 'Replaces patching', 'Removes logs'], answer: 1 },
+  { q: 'Log reviews are important for assessing security infrastructure because they often use:', choices: ['SIEM and NTP', 'DNS and DHCP', 'FTP and Telnet', 'NAT and VPN'], answer: 0 },
+  { q: 'Synthetic transactions are used to:', choices: ['Store passwords', 'Simulate traffic to test system behavior', 'Patch vulnerabilities', 'Encrypt files'], answer: 1 },
+  { q: 'Coverage analysis ensures:', choices: ['All intended areas are tested', 'Only one control is tested', 'No logs are generated', 'Users are locked out'], answer: 0 },
+  { q: 'Breach and attack simulations are used to:', choices: ['Test defenses with simulated attacks', 'Create backups', 'Issue certificates', 'Authenticate users'], answer: 0 },
+  { q: 'Internal audit is performed by:', choices: ['Internal staff', 'Only outside firms', 'The public', 'The red team'], answer: 0 },
+  { q: 'Third-party audit is conducted by:', choices: ['The system owner only', 'Another organization', 'The same users being audited', 'No one'], answer: 1 },
+  { q: 'COBIT is commonly used as a(n):', choices: ['Encryption algorithm', 'Auditing standard', 'Password policy', 'Network protocol'], answer: 1 },
+  { q: 'The main goal of test data analysis is to produce a:', choices: ['Firewall rule set', 'Remediation roadmap', 'User directory', 'Password vault'], answer: 1 },
+  { q: 'An exception in security means:', choices: ['A permanent rule', 'A temporary bypass that increases risk', 'A new audit control', 'A backup strategy'], answer: 1 },
+  { q: 'Ethical disclosure refers to:', choices: ['Hiding vulnerabilities forever', 'Responsibly disclosing incidents or vulnerabilities', 'Deleting logs immediately', 'Disabling all access'], answer: 1 },
+  { q: 'A Security Audit Report usually includes:', choices: ['Executive summary, findings, recommendations', 'Only usernames and passwords', 'Only network cables', 'Only screenshots'], answer: 0 },
+  { q: 'Which is a key indicator in security process data?', choices: ['Number of Open Vulnerabilities', 'Number of Chairs', 'Number of Printers', 'Number of Employees Only'], answer: 0 },
+  { q: 'Which item is a common risk or performance indicator?', choices: ['Time to Resolve', 'Keyboard Layout', 'Monitor Size', 'Desk Color'], answer: 0 }
+];
+
+let quizState = [];
+let quizTimeout = null;
+
+function shuffle(array){
+  const copy = [...array];
+  for(let i = copy.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function buildQuizState(){
+  quizState = shuffle(quizData).map((item, index) => {
+    const options = item.choices.map((choice, idx) => ({ choice, isCorrect: idx === item.answer }));
+    const shuffledOptions = shuffle(options);
+    const answerIndex = shuffledOptions.findIndex(option => option.isCorrect);
+    return {
+      id: index + 1,
+      q: item.q,
+      choices: shuffledOptions,
+      answer: answerIndex,
+      selected: null,
+      revealed: false
+    };
+  });
+}
+
+function renderQuiz(){
+  clearTimeout(quizTimeout);
+  buildQuizState();
+  const list = document.getElementById('quizList');
+  const score = document.getElementById('quizScore');
+  const stats = document.getElementById('quizStats');
+  list.innerHTML = '';
+  score.classList.remove('show');
+  score.innerHTML = '';
+  stats.textContent = `${quizState.length} multiple-choice items. Answer first, then check your score.`;
+
+  quizState.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'quiz-item';
+    card.dataset.index = String(idx);
+    const choices = item.choices.map((option, optIndex) => `
+      <label class="quiz-choice">
+        <input type="radio" name="q-${idx}" value="${optIndex}">
+        <span>${String.fromCharCode(65 + optIndex)}. ${option.choice}</span>
+      </label>
+    `).join('');
+    card.innerHTML = `
+      <div class="quiz-q">${idx + 1}. ${item.q}</div>
+      <div class="quiz-choices">${choices}</div>
+      <div class="quiz-feedback" aria-live="polite"></div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function gradeQuiz(){
+  const cards = [...document.querySelectorAll('.quiz-item')];
+  let correct = 0;
+  cards.forEach((card, idx) => {
+    const item = quizState[idx];
+    const selected = card.querySelector(`input[name="q-${idx}"]:checked`);
+    const selectedIndex = selected ? Number(selected.value) : null;
+    const choices = [...card.querySelectorAll('.quiz-choice')];
+    const feedback = card.querySelector('.quiz-feedback');
+
+    item.selected = selectedIndex;
+    item.revealed = true;
+    card.classList.remove('correct', 'wrong');
+
+    choices.forEach(choice => choice.classList.remove('correct', 'wrong'));
+
+    const correctChoice = choices[item.answer];
+    if (correctChoice) correctChoice.classList.add('correct');
+
+    if (selectedIndex === item.answer){
+      correct += 1;
+      card.classList.add('correct');
+      feedback.innerHTML = `<strong>Correct.</strong> ${item.choices[item.answer].choice}`;
+    } else {
+      card.classList.add('wrong');
+      if (selectedIndex !== null && choices[selectedIndex]) choices[selectedIndex].classList.add('wrong');
+      feedback.innerHTML = `<strong>Correct answer:</strong> ${String.fromCharCode(65 + item.answer)}. ${item.choices[item.answer].choice}`;
+    }
+  });
+
+  const scoreBox = document.getElementById('quizScore');
+  const stats = document.getElementById('quizStats');
+  const percent = Math.round((correct / quizState.length) * 100);
+  scoreBox.classList.add('show');
+  scoreBox.innerHTML = `Score: ${correct}/${quizState.length} (${percent}%)<div class="quiz-note">Answers are revealed. A new shuffled set will load shortly.</div>`;
+  stats.textContent = `Last score: ${correct}/${quizState.length} (${percent}%).`;
+
+  clearTimeout(quizTimeout);
+  quizTimeout = setTimeout(() => {
+    renderQuiz();
+  }, 4000);
+}
+
+document.getElementById('checkQuizBtn').addEventListener('click', gradeQuiz);
+document.getElementById('shuffleQuizBtn').addEventListener('click', renderQuiz);
+
 (function(){
   const root = document.documentElement;
   const toggle = document.getElementById('themeToggle');
@@ -544,4 +742,6 @@ function show(evt, id){
     applyTheme(next);
   });
 })();
+
+renderQuiz();
 </script>
