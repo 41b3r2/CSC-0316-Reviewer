@@ -1,0 +1,480 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",Inter,system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;font-size:15px;line-height:1.6;background:linear-gradient(180deg,var(--color-background-secondary),var(--color-background-primary));color:var(--color-text-primary);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.reviewer{max-width:1180px;margin:0 auto;padding:1rem 1rem 1.5rem}
+.reviewer-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;background:linear-gradient(135deg,var(--color-background-primary),var(--color-background-secondary));border:1px solid var(--color-border-tertiary);border-radius:calc(var(--border-radius-lg) + 2px);padding:1rem 1.1rem;margin-bottom:1rem;box-shadow:0 8px 24px rgba(0,0,0,.04)}
+.reviewer-header h2{font-size:1.15rem;line-height:1.3;margin-bottom:.25rem;color:var(--color-text-primary);font-weight:700}
+.reviewer-header p{font-size:.95rem;line-height:1.65;color:var(--color-text-secondary);max-width:60ch}
+.header-chip{align-self:center;font-size:12px;font-weight:600;padding:.4rem .7rem;border-radius:999px;background:var(--color-background-info);color:var(--color-text-info);border:1px solid var(--color-border-info);white-space:nowrap}
+.tabs{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:1rem;padding:.6rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);position:sticky;top:.75rem;z-index:5}
+.tab{padding:.65rem .95rem;border:1px solid var(--color-border-secondary);border-radius:999px;font-size:13px;font-weight:600;letter-spacing:.01em;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary);transition:transform .15s ease,box-shadow .15s ease,background .15s ease,color .15s ease,border-color .15s ease;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.tab:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.06)}
+.tab:focus-visible{outline:2px solid var(--color-border-info);outline-offset:2px}
+.tab.active{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info);font-weight:600;box-shadow:0 6px 16px rgba(0,0,0,.08)}
+.section{display:none;animation:fadeIn .18s ease-out}
+.section.active{display:block}
+.card{background:var(--color-background-primary);border:1px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.15rem;margin-bottom:1rem;box-shadow:0 8px 20px rgba(0,0,0,.035)}
+.card:hover{box-shadow:0 10px 24px rgba(0,0,0,.05)}
+.card-title{font-size:15px;font-weight:700;color:var(--color-text-primary);margin-bottom:.8rem;padding-bottom:.55rem;border-bottom:1px solid var(--color-border-tertiary)}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;margin-bottom:.5rem;letter-spacing:.02em}
+.badge-blue{background:var(--color-background-info);color:var(--color-text-info)}
+.badge-green{background:var(--color-background-success);color:var(--color-text-success)}
+.badge-red{background:var(--color-background-danger);color:var(--color-text-danger)}
+.badge-warn{background:var(--color-background-warning);color:var(--color-text-warning)}
+.term{display:flex;gap:.7rem;margin-bottom:.65rem;font-size:14px;line-height:1.7}
+.term-label{font-weight:600;color:var(--color-text-primary);min-width:130px;flex-shrink:0}
+.term-def{color:var(--color-text-secondary)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.acro{font-size:13px;background:var(--color-background-secondary);border:1px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.55rem .75rem;margin-bottom:.5rem;line-height:1.45}
+.acro strong{color:var(--color-text-primary)}
+.acro span{color:var(--color-text-secondary)}
+.tip{background:linear-gradient(90deg,var(--color-background-warning),rgba(255,193,7,.18));border-left:3px solid var(--color-border-warning);padding:.65rem .8rem;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:13px;color:var(--color-text-warning);margin-top:.8rem;line-height:1.5}
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--color-border-tertiary);border-radius:var(--border-radius-md);overflow:hidden;margin-bottom:.75rem}
+.compare-cell{background:var(--color-background-primary);padding:.65rem .8rem;font-size:13px;color:var(--color-text-secondary);line-height:1.65}
+.compare-head{background:var(--color-background-secondary);font-weight:600;font-size:13px;color:var(--color-text-primary)}
+.list-item{font-size:14px;color:var(--color-text-secondary);padding:.38rem 0;line-height:1.65;border-bottom:1px solid var(--color-border-tertiary)}
+.list-item:last-child{border-bottom:none}
+.list-item strong{color:var(--color-text-primary)}
+h3{font-size:12px;font-weight:700;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.08em;margin:.85rem 0 .55rem}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){.reviewer{padding:.75rem}.reviewer-header{flex-direction:column}.header-chip{align-self:flex-start}.tabs{top:.5rem}.two-col,.compare-row{grid-template-columns:1fr}.term{flex-direction:column;gap:2px}.term-label{min-width:unset}}
+@media(prefers-reduced-motion:reduce){.section,.tab{animation:none;transition:none}.tab:hover{transform:none}}
+</style>
+
+<div class="reviewer">
+<h2 class="sr-only">CSC 0316 Reviewer — Modules 6 and 7: IAM and Security Assessment</h2>
+
+<div class="reviewer-header">
+  <div>
+    <h2>CSC 0316 Reviewer</h2>
+    <p>Clean, easy-to-scan reviewer for Modules 6 and 7 with refined spacing, softer contrast, and better tab navigation.</p>
+  </div>
+  <div class="header-chip">Modules 6–7</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="show(event, 'mod6-iam')">Module 6: IAM</button>
+  <button class="tab" onclick="show(event, 'mod6-protocols')">Protocols & Auth</button>
+  <button class="tab" onclick="show(event, 'mod7-assess')">Module 7: Assessment</button>
+  <button class="tab" onclick="show(event, 'mod7-pentest')">Pentest & Teams</button>
+  <button class="tab" onclick="show(event, 'mod7-audit')">Audit & Output</button>
+  <button class="tab" onclick="show(event, 'acros')">Acronyms</button>
+</div>
+
+<div id="mod6-iam" class="section active">
+  <div class="card">
+    <div class="card-title">What is IAM?</div>
+    <div class="term"><span class="term-label">Definition</span><span class="term-def">Ensures the right person gets the right access to the right resource at the right time.</span></div>
+    <h3>Core components (4As)</h3>
+    <div class="term"><span class="term-label">Identity</span><span class="term-def">Who you are — user, system, or service.</span></div>
+    <div class="term"><span class="term-label">Authentication</span><span class="term-def">Proving your identity.</span></div>
+    <div class="term"><span class="term-label">Authorization</span><span class="term-def">What you are allowed to do.</span></div>
+    <div class="term"><span class="term-label">Accounting/Auditing</span><span class="term-def">Tracking what you did.</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Access Controls (10 Types)</div>
+    <div class="list-item"><strong>Preventative</strong> — stops incidents before they happen</div>
+    <div class="list-item"><strong>Detective</strong> — detects incidents when they occur</div>
+    <div class="list-item"><strong>Corrective</strong> — corrects after an incident</div>
+    <div class="list-item"><strong>Deterrent</strong> — discourages bad behavior</div>
+    <div class="list-item"><strong>Recovery</strong> — restores after an incident</div>
+    <div class="list-item"><strong>Directive</strong> — directs subjects toward compliance</div>
+    <div class="list-item"><strong>Compensating</strong> — compensates for a weakness</div>
+    <div class="list-item"><strong>Administrative</strong> — policies, procedures, training</div>
+    <div class="list-item"><strong>Technical/Logical</strong> — software & hardware controls</div>
+    <div class="list-item"><strong>Physical</strong> — physical barriers and controls</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Access Models</div>
+    <div class="term"><span class="term-label">RuBAC</span><span class="term-def">Rule-Based Access Control — access decided by predefined rules/conditions. Supports dynamic & fine-grained control.</span></div>
+    <div class="term"><span class="term-label">ABAC</span><span class="term-def">Attribute-Based Access Control — decisions based on attributes of users, resources, and environment. More flexible than roles alone.</span></div>
+    <div class="term"><span class="term-label">Risk-Based AC</span><span class="term-def">Dynamically adjusts permissions based on risk level of the access request (sensitivity, behavior, security posture).</span></div>
+    <div class="term"><span class="term-label">PEP</span><span class="term-def">Policy Enforcement Point — intercepts requests and enforces policies.</span></div>
+    <div class="term"><span class="term-label">PDP</span><span class="term-def">Policy Decision Point — evaluates policies and makes allow/deny decisions.</span></div>
+    <div class="term"><span class="term-label">PIP</span><span class="term-def">Policy Information Point — provides attribute info to PDPs.</span></div>
+    <div class="term"><span class="term-label">PAP</span><span class="term-def">Policy Administration Point — where admins define and manage access policies.</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Provisioning & Account Lifecycle</div>
+    <div class="term"><span class="term-label">Provisioning</span><span class="term-def">Onboarding — adding a user to the IAM system and granting access.</span></div>
+    <div class="term"><span class="term-label">Deprovisioning</span><span class="term-def">Offboarding — removing a user: disable/delete account, revoke certs, cancel access codes, return equipment.</span></div>
+    <div class="term"><span class="term-label">Privilege Creep</span><span class="term-def">When users accumulate access rights over time beyond what they need. Account management/reviews help guard against this.</span></div>
+    <div class="term"><span class="term-label">Account Access Review</span><span class="term-def">Verifies accounts don't have excessive privileges; ensures policies are followed; confirms accounts are disabled/deleted as required.</span></div>
+    <div class="tip">Exam tip: Deprovisioning issues arise when employees are "tipped off" early — e.g., IT requests equipment back prematurely, which is a security risk.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Service Accounts</div>
+    <div class="term"><span class="term-label">Definition</span><span class="term-def">Also called application accounts. Digital identity used by software/services to interact with other apps or the OS. Often used for machine-to-machine (API) communication.</span></div>
+    <h3>Attack vectors on service accounts</h3>
+    <div class="term"><span class="term-label">Privilege Escalation</span><span class="term-def">Attacker impersonates the account to elevate privileges.</span></div>
+    <div class="term"><span class="term-label">Spoofing</span><span class="term-def">Impersonates the account to hide identity.</span></div>
+    <div class="term"><span class="term-label">Non-repudiation</span><span class="term-def">Uses account to hide actions performed on the system.</span></div>
+    <div class="term"><span class="term-label">Information Disclosure</span><span class="term-def">Extracts infrastructure information via the service account.</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Session Management</div>
+    <div class="term"><span class="term-label">Session Creation</span><span class="term-def">Session IDs identify the session.</span></div>
+    <div class="term"><span class="term-label">Session Tracking</span><span class="term-def">Session ID tracks relevant user data.</span></div>
+    <div class="term"><span class="term-label">Session Timeout</span><span class="term-def">Terminates inactive sessions automatically.</span></div>
+    <div class="term"><span class="term-label">Session Termination</span><span class="term-def">User manually logs out.</span></div>
+    <div class="term"><span class="term-label">Session Security</span><span class="term-def">Protects against hijacking and fixation attacks.</span></div>
+    <div class="term"><span class="term-label">Client-side</span><span class="term-def">Session data stored/managed on the client.</span></div>
+    <div class="term"><span class="term-label">Server-side</span><span class="term-def">Session data stored/managed on the server.</span></div>
+  </div>
+</div>
+
+<div id="mod6-protocols" class="section">
+  <div class="card">
+    <div class="card-title">FIM — Federated Identity Management</div>
+    <div class="term"><span class="term-label">IdP</span><span class="term-def">Identity Provider — authenticates users and issues security tokens.</span></div>
+    <div class="term"><span class="term-label">SP</span><span class="term-def">Service Provider — hosts services; relies on IdP tokens to grant access.</span></div>
+    <div class="term"><span class="term-label">Security Token</span><span class="term-def">Issued by IdP after authentication; contains identity and permissions (SAML or JWT format).</span></div>
+    <div class="term"><span class="term-label">Federation Protocol</span><span class="term-def">Standardized comms between IdP and SP — OpenID Connect, OAuth.</span></div>
+    <h3>FIM deployment options</h3>
+    <div class="term"><span class="term-label">On-premise</span><span class="term-def">All FIM software on-site.</span></div>
+    <div class="term"><span class="term-label">Cloud</span><span class="term-def">Third-party FIM in the cloud.</span></div>
+    <div class="term"><span class="term-label">Hybrid</span><span class="term-def">Mix of on-premise and cloud.</span></div>
+    <h3>Benefits of FIM</h3>
+    <div class="list-item"><strong>SSO</strong> — authenticate once, access multiple services</div>
+    <div class="list-item"><strong>Improved Security</strong> — centralized auth/authorization</div>
+    <div class="list-item"><strong>Interoperability</strong> — seamless integration across domains</div>
+    <div class="list-item"><strong>Reduced Admin Overhead</strong> — streamlined provisioning/deprovisioning</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">SSO vs JIT</div>
+    <div class="compare-row">
+      <div class="compare-cell compare-head">SSO (Single Sign-On)</div>
+      <div class="compare-cell compare-head">JIT (Just-In-Time)</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Authenticate once → access multiple apps</div>
+      <div class="compare-cell">Temporary access granted only when needed</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Reduces password fatigue</div>
+      <div class="compare-cell">Follows least privilege principle</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Risk: single point of failure</div>
+      <div class="compare-cell">Reduces insider threat risk</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Easier user access management</div>
+      <div class="compare-cell">Dynamic provisioning based on context</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">OAuth 2.0, OpenID, OIDC</div>
+    <div class="term"><span class="term-label">OAuth 2.0</span><span class="term-def">Open Authorization. RFC 6749, maintained by IETF. Used to share account info with 3rd party sites. NOT backward compatible with OAuth 1.0.</span></div>
+    <div class="term"><span class="term-label">OpenID</span><span class="term-def">Open standard by OpenID Foundation. Decentralized authentication — one set of credentials for multiple sites via an OpenID Provider.</span></div>
+    <div class="term"><span class="term-label">OIDC</span><span class="term-def">OpenID Connect — authentication layer ON TOP of OAuth 2.0. Both auth & authorization. Uses JWT. Example: logging into eBay with your Google account.</span></div>
+    <div class="tip">Exam tip: OAuth = authorization only. OpenID = authentication only. OIDC = both.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">SAML</div>
+    <div class="term"><span class="term-label">Full Name</span><span class="term-def">Security Assertion Markup Language — based on XML. Used to exchange auth/authorization info between federated orgs. Often used for browser-based SSO.</span></div>
+    <h3>SAML 2.0 entities</h3>
+    <div class="term"><span class="term-label">Principal / User Agent</span><span class="term-def">The user trying to access an account.</span></div>
+    <div class="term"><span class="term-label">Service Provider (SP)</span><span class="term-def">The website the user is accessing.</span></div>
+    <div class="term"><span class="term-label">Identity Provider (IdP)</span><span class="term-def">Third party holding the user's auth and authorization info.</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Kerberos</div>
+    <div class="term"><span class="term-label">Type</span><span class="term-def">SSO system used within networks. Ticket authentication mechanism using a trusted third party.</span></div>
+    <div class="term"><span class="term-label">KDC</span><span class="term-def">Key Distribution Center — trusted third party; all clients/servers register here.</span></div>
+    <div class="term"><span class="term-label">Auth Server</span><span class="term-def">Hosts KDC functions; verifies authenticity and timeliness of tickets.</span></div>
+    <div class="term"><span class="term-label">Ticket</span><span class="term-def">Encrypted message proving subject is permitted to access an object.</span></div>
+    <div class="term"><span class="term-label">TGT</span><span class="term-def">Ticket-Granting Ticket — proof that subject authenticated via KDC and can request access to other objects.</span></div>
+    <div class="term"><span class="term-label">Kerberos Realm</span><span class="term-def">A logical area controlled by Kerberos.</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">RADIUS vs TACACS+</div>
+    <div class="compare-row">
+      <div class="compare-cell compare-head">RADIUS</div>
+      <div class="compare-cell compare-head">TACACS+</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Remote Authentication Dial-in User Service</div>
+      <div class="compare-cell">Terminal Access Controller Access Control System Plus (Cisco)</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Uses UDP</div>
+      <div class="compare-cell">Uses TCP port 49</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Only encrypts password exchange</div>
+      <div class="compare-cell">Encrypts ALL authentication info by default</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">AAA combined in one process</div>
+      <div class="compare-cell">AAA separated into distinct processes (can run on separate servers)</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Used for centralized remote access / VPN auth</div>
+      <div class="compare-cell">Improvement over RADIUS by Cisco</div>
+    </div>
+    <div class="tip">Exam tip: TACACS+ = more secure (full encryption), more flexible (separate AAA). RADIUS = simpler, UDP, password-only encryption.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Credential Management</div>
+    <div class="list-item"><strong>Secure Storage</strong> — encrypted vaults for credentials</div>
+    <div class="list-item"><strong>Centralized Repository</strong> — single place for all credentials</div>
+    <div class="list-item"><strong>Password Generation</strong> — creates strong passwords</div>
+    <div class="list-item"><strong>Auto-fill / Auto-login</strong> — convenience features</div>
+    <div class="list-item"><strong>MFA Integration</strong> — supports multi-factor auth</div>
+    <div class="list-item"><strong>Access Control</strong> — who can access what credential</div>
+    <div class="list-item"><strong>Audit Trails and Reporting</strong> — log all access events</div>
+    <div class="list-item"><strong>Cross-Platform Support</strong> — works across devices</div>
+    <div class="list-item"><strong>Secure Sharing</strong> — share creds without exposing plaintext</div>
+    <div class="list-item"><strong>Password Health Monitoring</strong> — flags weak/reused/breached passwords</div>
+  </div>
+</div>
+
+<div id="mod7-assess" class="section">
+  <div class="card">
+    <div class="card-title">Security Testing vs Assessment vs Audit</div>
+    <div class="compare-row">
+      <div class="compare-cell compare-head">Security Testing</div>
+      <div class="compare-cell compare-head">Security Assessment</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Verifies controls are functioning properly</div>
+      <div class="compare-cell">Comprehensive review — goes beyond testing</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Should be on a regular schedule</div>
+      <div class="compare-cell">Includes risk and threat environment reviews</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Focused on specific controls</div>
+      <div class="compare-cell">Assessment report often required</div>
+    </div>
+    <div style="height:.5rem"></div>
+    <div class="term"><span class="term-label">Security Audit</span><span class="term-def">Similar to assessment but performed by independent auditors. Can be internal, external, or third-party.</span></div>
+    <div class="tip">Key distinction: Testing = verify controls. Assessment = comprehensive + risk. Audit = assessment done by independent auditors.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Scheduling Security Tests — Factors to Consider</div>
+    <div class="list-item">Availability of testing resources</div>
+    <div class="list-item">Criticality of the systems being protected</div>
+    <div class="list-item">Sensitivity of data on systems</div>
+    <div class="list-item">Likelihood of technical failure</div>
+    <div class="list-item">Likelihood of a misconfiguration</div>
+    <div class="list-item">Risk the system will come under attack</div>
+    <div class="list-item">Rate of change of the control configuration</div>
+    <div class="list-item">Other changes in the technical environment</div>
+    <div class="list-item">Difficulty and time required to perform the test</div>
+    <div class="list-item">Impact of test on normal business operations</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">NIST Assessment Framework (NIST SP 800-53A)</div>
+    <div class="term"><span class="term-label">Specifications</span><span class="term-def">Documents associated with the system being audited.</span></div>
+    <div class="term"><span class="term-label">Mechanisms</span><span class="term-def">Controls used within an information system to meet the specifications.</span></div>
+    <div class="term"><span class="term-label">Activities</span><span class="term-def">Actions carried out by people within the information system.</span></div>
+    <div class="term"><span class="term-label">Individuals</span><span class="term-def">People who implement specifications, mechanisms, and activities.</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Vulnerability Assessment</div>
+    <div class="term"><span class="term-label">Purpose</span><span class="term-def">Discovers system weaknesses. Tests are commonly automated and help build a remediation roadmap.</span></div>
+    <div class="term"><span class="term-label">SCAP</span><span class="term-def">Security Content Automation Protocol — NIST initiative providing standards around vulnerabilities.</span></div>
+    <div class="term"><span class="term-label">CVE</span><span class="term-def">Common Vulnerabilities and Exposures — standard identifiers for known vulnerabilities.</span></div>
+    <div class="term"><span class="term-label">CVSS</span><span class="term-def">Common Vulnerability Scoring System — scores severity of vulnerabilities.</span></div>
+    <h3>Types of vulnerability scans</h3>
+    <div class="list-item">Network discovery scans</div>
+    <div class="list-item">Network vulnerability scans</div>
+    <div class="list-item">Web app vulnerability scans</div>
+    <div class="list-item">Database vulnerability scans</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Other Common Tests</div>
+    <div class="term"><span class="term-label">Log Reviews</span><span class="term-def">Important for assessing security infrastructure. SIEMs used; NTP syncs time across devices for log correlation.</span></div>
+    <div class="term"><span class="term-label">Synthetic Transactions</span><span class="term-def">Simulating traffic (often via scripts) to test system behavior.</span></div>
+    <div class="term"><span class="term-label">Code Review</span><span class="term-def">Testing software as part of the development process.</span></div>
+    <div class="term"><span class="term-label">Misuse Case Testing</span><span class="term-def">Testing how a system behaves when misused.</span></div>
+    <div class="term"><span class="term-label">Coverage Analysis</span><span class="term-def">Ensures testing covers all intended areas of the system.</span></div>
+    <div class="term"><span class="term-label">Breach & Attack Simulations</span><span class="term-def">Simulated attacks to test defenses.</span></div>
+    <div class="term"><span class="term-label">Compliance Checks</span><span class="term-def">Verifying adherence to standards.</span></div>
+    <div class="term"><span class="term-label">Interface Testing</span><span class="term-def">Testing APIs, UIs, and integration points.</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Collecting Security Process Data</div>
+    <div class="term"><span class="term-label">Account Management</span><span class="term-def">Collect data to ensure users have correct authorization levels. Guards against privilege creep.</span></div>
+    <h3>Key Performance & Risk Indicators (KPIs/KRIs)</h3>
+    <div class="list-item">Number of Open Vulnerabilities</div>
+    <div class="list-item">Time to Resolve</div>
+    <div class="list-item">Rate of Occurrence</div>
+    <div class="list-item">Number of Compromises</div>
+    <div class="list-item">Number of Software Flaws</div>
+    <div class="list-item">Audit Findings</div>
+  </div>
+</div>
+
+<div id="mod7-pentest" class="section">
+  <div class="card">
+    <div class="card-title">Penetration Testing Types</div>
+    <div class="compare-row">
+      <div class="compare-cell compare-head">Type</div>
+      <div class="compare-cell compare-head">Description</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell"><strong>Black Box</strong></div>
+      <div class="compare-cell">Tester has zero knowledge of the system — simulates an external attacker.</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell"><strong>White Box</strong></div>
+      <div class="compare-cell">Tester has full knowledge — source code, architecture, credentials. Most thorough.</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell"><strong>Gray Box</strong></div>
+      <div class="compare-cell">Tester has partial knowledge — simulates an insider or partially informed attacker.</div>
+    </div>
+    <div class="tip">Memory trick: Black = zero info (no light). White = full info (full light). Gray = somewhere in between.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Red Team vs Blue Team vs Purple Team</div>
+    <div class="compare-row">
+      <div class="compare-cell compare-head">Red Team (Attack)</div>
+      <div class="compare-cell compare-head">Blue Team (Defend)</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Ethical Hacker / Pentester</div>
+      <div class="compare-cell">SOC Analyst (Level 1–3)</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Exploit Developer</div>
+      <div class="compare-cell">Incident Response (IR Analyst)</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Bug Bounty Hunter</div>
+      <div class="compare-cell">Threat Hunter</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">Physical Security Pentester</div>
+      <div class="compare-cell">Digital Forensic Analyst</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell"></div>
+      <div class="compare-cell">Threat Intelligence Analyst</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell"></div>
+      <div class="compare-cell">Vulnerability Management Analyst</div>
+    </div>
+    <h3>Tools</h3>
+    <div class="compare-row">
+      <div class="compare-cell"><strong>Red:</strong> Nmap, Metasploit, Kali Linux</div>
+      <div class="compare-cell"><strong>Blue:</strong> SIEM (QRadar, Splunk, Sentinel), Qualys, OpenVAS, Maltego, IPS/IDS, EDR, Firewall Rules</div>
+    </div>
+    <div style="height:.5rem"></div>
+    <div class="term"><span class="term-label">Purple Team</span><span class="term-def">Collaboration between Red and Blue teams to improve the effectiveness of both attack and defense assessments.</span></div>
+    <div class="tip">Exam tip: Red = offensive. Blue = defensive. Purple = collaborative improvement between both.</div>
+  </div>
+</div>
+
+<div id="mod7-audit" class="section">
+  <div class="card">
+    <div class="card-title">Types of Security Audits</div>
+    <div class="term"><span class="term-label">Internal Audit</span><span class="term-def">Performed by internal staff for internal audiences. Reporting line is independent of the functions being evaluated.</span></div>
+    <div class="term"><span class="term-label">External Audit</span><span class="term-def">Performed by an outside auditing firm.</span></div>
+    <div class="term"><span class="term-label">Third-Party Audit</span><span class="term-def">Conducted by another organization (e.g., regulatory body auditing a firm under their regulation).</span></div>
+    <h3>Audit location types</h3>
+    <div class="term"><span class="term-label">On-premise</span><span class="term-def">Audit performed at the physical site.</span></div>
+    <div class="term"><span class="term-label">Cloud</span><span class="term-def">Audit performed in cloud environments.</span></div>
+    <div class="term"><span class="term-label">Hybrid</span><span class="term-def">Mix of on-premise and cloud audit.</span></div>
+    <div class="tip">Auditing standard: COBIT (Control Objectives for Information and Related Technologies) is commonly used.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Analyzing Test Output — Report Components</div>
+    <div class="list-item"><strong>Executive Summary</strong> — high-level overview for leadership</div>
+    <div class="list-item"><strong>Scope and Objectives</strong> — what was tested and why</div>
+    <div class="list-item"><strong>Methodology</strong> — how the testing was conducted</div>
+    <div class="list-item"><strong>Findings</strong> — discovered vulnerabilities and issues</div>
+    <div class="list-item"><strong>Risk Analysis</strong> — impact and likelihood assessment</div>
+    <div class="list-item"><strong>Recommendations</strong> — how to fix the issues</div>
+    <div class="list-item"><strong>Timelines and Resources</strong> — remediation schedule</div>
+    <div class="tip">The main goal of test data analysis = a REMEDIATION ROADMAP provided to stakeholders.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Exception Handling & Ethical Disclosure</div>
+    <div class="term"><span class="term-label">Exception</span><span class="term-def">When a policy, procedure, or control is temporarily bypassed. Must be documented and justified. Exceptions always increase risk.</span></div>
+    <div class="term"><span class="term-label">Ethical Disclosure</span><span class="term-def">Some security incidents must be ethically disclosed. Many orgs lack a disclosure policy. DHS created a Vulnerability Disclosure Policy template.</span></div>
+    <div class="tip">Exam tip: Exceptions = temporary bypass = increased risk. Documentation is always key.</div>
+  </div>
+</div>
+
+<div id="acros" class="section">
+  <div class="card">
+    <div class="card-title">Module 6 Acronyms</div>
+    <div class="acro"><strong>IAM</strong> — <span>Identity and Access Management</span></div>
+    <div class="acro"><strong>AAA</strong> — <span>Authentication, Authorization, Accounting</span></div>
+    <div class="acro"><strong>FIM</strong> — <span>Federated Identity Management</span></div>
+    <div class="acro"><strong>SSO</strong> — <span>Single Sign-On</span></div>
+    <div class="acro"><strong>JIT</strong> — <span>Just-In-Time (access)</span></div>
+    <div class="acro"><strong>IdP</strong> — <span>Identity Provider</span></div>
+    <div class="acro"><strong>SP</strong> — <span>Service Provider</span></div>
+    <div class="acro"><strong>SAML</strong> — <span>Security Assertion Markup Language</span></div>
+    <div class="acro"><strong>JWT</strong> — <span>JSON Web Token</span></div>
+    <div class="acro"><strong>OIDC</strong> — <span>OpenID Connect</span></div>
+    <div class="acro"><strong>OAuth</strong> — <span>Open Authorization (RFC 6749)</span></div>
+    <div class="acro"><strong>RuBAC</strong> — <span>Rule-Based Access Control</span></div>
+    <div class="acro"><strong>ABAC</strong> — <span>Attribute-Based Access Control</span></div>
+    <div class="acro"><strong>RBAC</strong> — <span>Risk-Based Access Control (in this module)</span></div>
+    <div class="acro"><strong>PEP</strong> — <span>Policy Enforcement Point</span></div>
+    <div class="acro"><strong>PDP</strong> — <span>Policy Decision Point</span></div>
+    <div class="acro"><strong>PIP</strong> — <span>Policy Information Point</span></div>
+    <div class="acro"><strong>PAP</strong> — <span>Policy Administration Point</span></div>
+    <div class="acro"><strong>RADIUS</strong> — <span>Remote Authentication Dial-in User Service</span></div>
+    <div class="acro"><strong>TACACS+</strong> — <span>Terminal Access Controller Access Control System Plus</span></div>
+    <div class="acro"><strong>KDC</strong> — <span>Key Distribution Center (Kerberos)</span></div>
+    <div class="acro"><strong>TGT</strong> — <span>Ticket-Granting Ticket (Kerberos)</span></div>
+    <div class="acro"><strong>MFA</strong> — <span>Multi-Factor Authentication</span></div>
+    <div class="acro"><strong>BYOD</strong> — <span>Bring Your Own Device</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Module 7 Acronyms</div>
+    <div class="acro"><strong>SCAP</strong> — <span>Security Content Automation Protocol</span></div>
+    <div class="acro"><strong>CVE</strong> — <span>Common Vulnerabilities and Exposures</span></div>
+    <div class="acro"><strong>CVSS</strong> — <span>Common Vulnerability Scoring System</span></div>
+    <div class="acro"><strong>SIEM</strong> — <span>Security Information and Event Management</span></div>
+    <div class="acro"><strong>NTP</strong> — <span>Network Time Protocol</span></div>
+    <div class="acro"><strong>SOC</strong> — <span>Security Operations Center</span></div>
+    <div class="acro"><strong>IPS</strong> — <span>Intrusion Prevention System</span></div>
+    <div class="acro"><strong>IDS</strong> — <span>Intrusion Detection System</span></div>
+    <div class="acro"><strong>EDR</strong> — <span>Endpoint Detection and Response</span></div>
+    <div class="acro"><strong>COBIT</strong> — <span>Control Objectives for Information and Related Technologies</span></div>
+    <div class="acro"><strong>NIST SP 800-53A</strong> — <span>Assessing Security and Privacy Controls in Federal Info Systems</span></div>
+    <div class="acro"><strong>DHS</strong> — <span>Department of Homeland Security</span></div>
+    <div class="acro"><strong>VA</strong> — <span>Vulnerability Assessment</span></div>
+  </div>
+</div>
+</div>
+
+<script>
+function show(evt, id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  evt.currentTarget.classList.add('active');
+}
+</script>
