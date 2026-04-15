@@ -735,13 +735,8 @@ function gradeQuiz(){
   const stats = document.getElementById('quizStats');
   const percent = Math.round((correct / quizState.length) * 100);
   scoreBox.classList.add('show');
-  scoreBox.innerHTML = `Score: ${correct}/${quizState.length} (${percent}%)<div class="quiz-note">Answers are revealed. A new shuffled set will load shortly.</div>`;
+  scoreBox.innerHTML = `Score: ${correct}/${quizState.length} (${percent}%)<div class="quiz-note">Answers are revealed. You can review them anytime until you press Shuffle Quiz.</div>`;
   stats.textContent = `Last score: ${correct}/${quizState.length} (${percent}%).`;
-
-  clearTimeout(quizTimeout);
-  quizTimeout = setTimeout(() => {
-    renderQuiz();
-  }, 4000);
 }
 
 document.getElementById('checkQuizBtn').addEventListener('click', gradeQuiz);
