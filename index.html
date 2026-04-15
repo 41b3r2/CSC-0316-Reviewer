@@ -99,6 +99,8 @@ body{font-family:"Segoe UI",Inter,system-ui,-apple-system,BlinkMacSystemFont,"He
 .quiz-choice{display:flex;align-items:flex-start;gap:.6rem;padding:.68rem .75rem;border:1px solid var(--border);border-radius:var(--border-radius-md);background:var(--card-bg-soft);cursor:pointer;transition:background .15s ease,border-color .15s ease}
 .quiz-choice:hover{border-color:var(--border-strong)}
 .quiz-choice input{margin-top:.15rem;accent-color:var(--info-text)}
+.quiz-choice input[type="text"]{width:100%;margin-top:0;padding:.7rem .8rem;border:1px solid var(--border-strong);border-radius:var(--border-radius-md);background:var(--card-bg);color:var(--text-primary);font:inherit;line-height:1.5;accent-color:initial}
+.quiz-choice input[type="text"]::placeholder{color:var(--text-secondary)}
 .quiz-choice span{color:var(--text-secondary);line-height:1.6;font-size:clamp(16px,.6vw + 12px,19px)}
 .quiz-choice.correct{border-color:var(--success-text);background:var(--success-bg)}
 .quiz-choice.wrong{border-color:var(--danger-text);background:var(--danger-bg)}
@@ -155,7 +157,9 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
   <button class="tab" onclick="show(event, 'mod7-assess')">Module 7: Assessment</button>
   <button class="tab" onclick="show(event, 'mod7-pentest')">Pentest & Teams</button>
   <button class="tab" onclick="show(event, 'mod7-audit')">Audit & Output</button>
-  <button class="tab" onclick="show(event, 'quiz')">Quiz 50 Items</button>
+  <button class="tab" onclick="show(event, 'quiz')">MCQ Quiz 50 Items</button>
+  <button class="tab" onclick="show(event, 'scenarioQuiz')">Scenario Quiz</button>
+  <button class="tab" onclick="show(event, 'enumQuiz')">Enumeration Quiz</button>
   <button class="tab" onclick="show(event, 'acros')">Acronyms</button>
 </div>
 
@@ -534,6 +538,36 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
   </div>
 </div>
 
+<div id="scenarioQuiz" class="section">
+  <div class="card">
+    <div class="card-title">Scenario Quiz — Apply the Concepts</div>
+    <div class="quiz-meta">
+      <div class="quiz-stats" id="scenarioStats">Read each situation and pick the best answer.</div>
+      <div class="quiz-actions">
+        <button class="quiz-btn primary" type="button" id="checkScenarioBtn">Check Answers & Reveal Score</button>
+        <button class="quiz-btn" type="button" id="shuffleScenarioBtn">Shuffle Quiz</button>
+      </div>
+    </div>
+    <div class="quiz-score" id="scenarioScore"></div>
+    <div class="quiz-list" id="scenarioList"></div>
+  </div>
+</div>
+
+<div id="enumQuiz" class="section">
+  <div class="card">
+    <div class="card-title">Enumeration Quiz — List the Correct Items</div>
+    <div class="quiz-meta">
+      <div class="quiz-stats" id="enumStats">Type the answers in order. Separate items with commas.</div>
+      <div class="quiz-actions">
+        <button class="quiz-btn primary" type="button" id="checkEnumBtn">Check Answers & Reveal Score</button>
+        <button class="quiz-btn" type="button" id="shuffleEnumBtn">Shuffle Quiz</button>
+      </div>
+    </div>
+    <div class="quiz-score" id="enumScore"></div>
+    <div class="quiz-list" id="enumList"></div>
+  </div>
+</div>
+
 <div id="acros" class="section">
   <div class="card">
     <div class="card-title">Module 6 Acronyms</div>
@@ -643,8 +677,50 @@ const quizData = [
   { q: 'Which item is a common risk or performance indicator?', choices: ['Time to Resolve', 'Keyboard Layout', 'Monitor Size', 'Desk Color'], answer: 0 }
 ];
 
+const scenarioData = [
+  { q: 'An employee is told to return their laptop before the resignation is public. What risk is this most similar to?', choices: ['Privilege creep', 'Being tipped off during deprovisioning', 'Password spraying', 'Synthetic transaction testing'], answer: 1 },
+  { q: 'A company wants access rules to change based on the user location and device risk. Which model fits best?', choices: ['RuBAC', 'ABAC', 'DAC', 'MAC'], answer: 1 },
+  { q: 'A tester gets the source code, architecture, and credentials before testing. What type of pentest is this?', choices: ['Black box', 'Gray box', 'White box', 'Red team'], answer: 2 },
+  { q: 'A website lets users sign in once and then access several connected apps. What is the best description?', choices: ['SSO', 'JIT', 'SCAP', 'TGT'], answer: 0 },
+  { q: 'An organization only grants admin access for the exact moment it is needed. What access style is this?', choices: ['Privilege creep', 'JIT access', 'Service account access', 'Static authorization'], answer: 1 },
+  { q: 'A security team is reviewing controls to see whether they work properly on a schedule. What activity is this?', choices: ['Security testing', 'Security audit', 'Credential sharing', 'Deprovisioning'], answer: 0 },
+  { q: 'An outside firm is hired to review the company’s controls independently. What is this called?', choices: ['Internal audit', 'External audit', 'Provisioning', 'Policy enforcement'], answer: 1 },
+  { q: 'A company uses a trusted third party to issue tickets inside the network. Which system is this?', choices: ['Kerberos', 'SAML', 'OAuth 2.0', 'RADIUS'], answer: 0 },
+  { q: 'A blue-team analyst is checking logs and time stamps across systems for correlation. Which service matters most?', choices: ['NTP', 'PAP', 'PIP', 'SP'], answer: 0 },
+  { q: 'A vulnerability scan finds many outdated packages, and the report must become a fix plan. What is the main output?', choices: ['Remediation roadmap', 'Red team playbook', 'User provisioning list', 'Session token map'], answer: 0 },
+  { q: 'A company wants policies to change based on predefined if-then conditions. Which model fits best?', choices: ['RuBAC', 'ABAC', 'DAC', 'MAC'], answer: 0 },
+  { q: 'A student logs into one portal and can open email, LMS, and library systems without signing in again. What is this?', choices: ['SSO', 'JIT', 'MFA', 'SCAP'], answer: 0 },
+  { q: 'A user account is removed, certificates are revoked, and equipment is returned after resignation. What process is this?', choices: ['Provisioning', 'Deprovisioning', 'Auditing', 'Federation'], answer: 1 },
+  { q: 'A system uses a service account for API-to-API communication. What is the biggest concern if the account is exposed?', choices: ['Privilege escalation', 'Screen brightness', 'Data compression', 'Keyboard mapping'], answer: 0 },
+  { q: 'A security analyst wants to test the system from an attacker’s point of view with no prior knowledge. What approach is best?', choices: ['White box', 'Gray box', 'Black box', 'Purple box'], answer: 2 },
+  { q: 'A team is using simulated attacks to evaluate defenses before real attackers do. What are they doing?', choices: ['Breach and attack simulations', 'Account provisioning', 'Password rotation', 'Data classification'], answer: 0 },
+  { q: 'A manager wants to verify that account permissions are still appropriate after role changes. What should be done?', choices: ['Account access review', 'System formatting', 'Patch removal', 'Token sharing'], answer: 0 },
+  { q: 'A report must summarize findings, risk, and recommendations for leadership. What is the most likely output?', choices: ['Security audit report', 'Source code backup', 'Service ticket', 'Access token'], answer: 0 },
+  { q: 'A login system uses a trusted third party and ticketing for network resources. Which term best matches the environment?', choices: ['Kerberos realm', 'OpenID provider', 'OAuth scope', 'SOC dashboard'], answer: 0 },
+  { q: 'A team compares RADIUS and TACACS+ and chooses the one with separate AAA and full encryption. Which is it?', choices: ['RADIUS', 'TACACS+', 'SAML', 'OIDC'], answer: 1 }
+];
+
+const enumerationData = [
+  { q: 'Enumerate the 4As of IAM', answers: ['identity', 'authentication', 'authorization', 'accounting/auditing'] },
+  { q: 'Enumerate the 4 main P-function components in access control', answers: ['pep', 'pdp', 'pip', 'pap'] },
+  { q: 'Enumerate the 3 common penetration testing types', answers: ['black box', 'white box', 'gray box'] },
+  { q: 'Enumerate the 3 team colors used in offensive/defensive collaboration', answers: ['red team', 'blue team', 'purple team'] },
+  { q: 'Enumerate the 3 common security assessment categories discussed in the module', answers: ['security testing', 'security assessment', 'security audit'] },
+  { q: 'Enumerate the 3 main federated identity terms', answers: ['identity provider', 'service provider', 'security token'] },
+  { q: 'Enumerate the 3 main FIM deployment options', answers: ['on-premise', 'cloud', 'hybrid'] },
+  { q: 'Enumerate the 4 common vulnerability scan types', answers: ['network discovery scans', 'network vulnerability scans', 'web app vulnerability scans', 'database vulnerability scans'] },
+  { q: 'Enumerate the 4 main Security Audit Report components', answers: ['executive summary', 'scope and objectives', 'methodology', 'findings'] },
+  { q: 'Enumerate the 6 KPIs/KRIs listed in the reviewer', answers: ['number of open vulnerabilities', 'time to resolve', 'rate of occurrence', 'number of compromises', 'number of software flaws', 'audit findings'] },
+  { q: 'Enumerate the 3 audit types', answers: ['internal audit', 'external audit', 'third-party audit'] },
+  { q: 'Enumerate the 3 penetration testing knowledge levels', answers: ['black box', 'white box', 'gray box'] },
+  { q: 'Enumerate the 3 core OAuth/OpenID-related terms', answers: ['oauth 2.0', 'openid', 'oidc'] },
+  { q: 'Enumerate the 4 AAA-related support terms in the reviewer', answers: ['kdc', 'tgt', 'radius', 'tacacs+'] }
+];
+
 let quizState = [];
 let quizTimeout = null;
+let scenarioState = [];
+let enumState = [];
 
 function shuffle(array){
   const copy = [...array];
@@ -701,6 +777,91 @@ function renderQuiz(){
   });
 }
 
+function buildScenarioState(){
+  scenarioState = shuffle(scenarioData).map((item, index) => {
+    const options = item.choices.map((choice, idx) => ({ choice, isCorrect: idx === item.answer }));
+    const shuffledOptions = shuffle(options);
+    const answerIndex = shuffledOptions.findIndex(option => option.isCorrect);
+    return {
+      id: index + 1,
+      q: item.q,
+      choices: shuffledOptions,
+      answer: answerIndex,
+      selected: null,
+      revealed: false
+    };
+  });
+}
+
+function buildEnumState(){
+  enumState = shuffle(enumerationData).map((item, index) => ({
+    id: index + 1,
+    q: item.q,
+    answers: item.answers.map(answer => answer.toLowerCase()),
+    selected: '',
+    revealed: false
+  }));
+}
+
+function renderScenarioQuiz(){
+  clearTimeout(quizTimeout);
+  buildScenarioState();
+  const list = document.getElementById('scenarioList');
+  const score = document.getElementById('scenarioScore');
+  const stats = document.getElementById('scenarioStats');
+  list.innerHTML = '';
+  score.classList.remove('show');
+  score.innerHTML = '';
+  stats.textContent = `${scenarioState.length} scenario-based items. Choose the best answer.`;
+
+  scenarioState.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'quiz-item';
+    card.dataset.index = String(idx);
+    const choices = item.choices.map((option, optIndex) => `
+      <label class="quiz-choice">
+        <input type="radio" name="scenario-${idx}" value="${optIndex}">
+        <span>${String.fromCharCode(65 + optIndex)}. ${option.choice}</span>
+      </label>
+    `).join('');
+    card.innerHTML = `
+      <div class="quiz-q">${idx + 1}. ${item.q}</div>
+      <div class="quiz-choices">${choices}</div>
+      <div class="quiz-feedback" aria-live="polite"></div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function renderEnumQuiz(){
+  clearTimeout(quizTimeout);
+  buildEnumState();
+  const list = document.getElementById('enumList');
+  const score = document.getElementById('enumScore');
+  const stats = document.getElementById('enumStats');
+  list.innerHTML = '';
+  score.classList.remove('show');
+  score.innerHTML = '';
+  stats.textContent = `${enumState.length} enumeration items. Enter the answers in order, separated by commas.`;
+
+  enumState.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'quiz-item';
+    card.dataset.index = String(idx);
+    card.innerHTML = `
+      <div class="quiz-q">${idx + 1}. ${item.q}</div>
+      <div class="quiz-choices">
+        <label class="quiz-choice" style="cursor:text; align-items:stretch;">
+          <input type="text" data-enum-input="${idx}" placeholder="Type your answers here">
+          <span>Separate each answer with a comma. Order does not matter. Example: item 1, item 2, item 3</span>
+        </label>
+      </div>
+      <div class="quiz-feedback" aria-live="polite"></div>
+    `;
+    list.appendChild(card);
+  });
+}
+
 function gradeQuiz(){
   const cards = [...document.querySelectorAll('.quiz-item')];
   let correct = 0;
@@ -739,8 +900,87 @@ function gradeQuiz(){
   stats.textContent = `Last score: ${correct}/${quizState.length} (${percent}%).`;
 }
 
+function gradeScenarioQuiz(){
+  const cards = [...document.querySelectorAll('#scenarioList .quiz-item')];
+  let correct = 0;
+  cards.forEach((card, idx) => {
+    const item = scenarioState[idx];
+    const selected = card.querySelector(`input[name="scenario-${idx}"]:checked`);
+    const selectedIndex = selected ? Number(selected.value) : null;
+    const choices = [...card.querySelectorAll('.quiz-choice')];
+    const feedback = card.querySelector('.quiz-feedback');
+
+    item.selected = selectedIndex;
+    item.revealed = true;
+    card.classList.remove('correct', 'wrong');
+    choices.forEach(choice => choice.classList.remove('correct', 'wrong'));
+
+    const correctChoice = choices[item.answer];
+    if (correctChoice) correctChoice.classList.add('correct');
+
+    if (selectedIndex === item.answer){
+      correct += 1;
+      card.classList.add('correct');
+      feedback.innerHTML = `<strong>Correct.</strong> ${item.choices[item.answer].choice}`;
+    } else {
+      card.classList.add('wrong');
+      if (selectedIndex !== null && choices[selectedIndex]) choices[selectedIndex].classList.add('wrong');
+      feedback.innerHTML = `<strong>Correct answer:</strong> ${String.fromCharCode(65 + item.answer)}. ${item.choices[item.answer].choice}`;
+    }
+  });
+
+  const scoreBox = document.getElementById('scenarioScore');
+  const stats = document.getElementById('scenarioStats');
+  const percent = Math.round((correct / scenarioState.length) * 100);
+  scoreBox.classList.add('show');
+  scoreBox.innerHTML = `Score: ${correct}/${scenarioState.length} (${percent}%)<div class="quiz-note">Scenario answers are revealed. Use the situations to practice application, not just memorization.</div>`;
+  stats.textContent = `Last score: ${correct}/${scenarioState.length} (${percent}%).`;
+}
+
+function gradeEnumQuiz(){
+  const cards = [...document.querySelectorAll('#enumList .quiz-item')];
+  let totalScore = 0;
+  cards.forEach((card, idx) => {
+    const item = enumState[idx];
+    const input = card.querySelector(`[data-enum-input="${idx}"]`);
+    const feedback = card.querySelector('.quiz-feedback');
+    const value = (input?.value || '').toLowerCase().trim();
+    const selectedAnswers = [...new Set(value.split(',').map(v => v.trim()).filter(Boolean))];
+    const correctAnswers = new Set(item.answers);
+    const matchedAnswers = selectedAnswers.filter(answer => correctAnswers.has(answer));
+    const itemScore = matchedAnswers.length;
+
+    item.selected = value;
+    item.revealed = true;
+    card.classList.remove('correct', 'wrong');
+    input.disabled = true;
+
+    totalScore += itemScore;
+
+    if (itemScore === item.answers.length && selectedAnswers.length === item.answers.length){
+      card.classList.add('correct');
+      feedback.innerHTML = `<strong>Correct.</strong> ${item.answers.map(a => a.replace(/\b\w/g, c => c.toUpperCase())).join(', ')}`;
+    } else {
+      card.classList.add('wrong');
+      feedback.innerHTML = `<strong>Score for this item:</strong> ${itemScore}/${item.answers.length}<br><strong>Correct answer:</strong> ${item.answers.map(a => a.replace(/\b\w/g, c => c.toUpperCase())).join(', ')}`;
+    }
+  });
+
+  const scoreBox = document.getElementById('enumScore');
+  const stats = document.getElementById('enumStats');
+  const totalPossible = enumState.reduce((sum, item) => sum + item.answers.length, 0);
+  const percent = Math.round((totalScore / totalPossible) * 100);
+  scoreBox.classList.add('show');
+  scoreBox.innerHTML = `Score: ${totalScore}/${totalPossible} (${percent}%)<div class="quiz-note">Enumeration answers are matched case-insensitively, order does not matter, and partial credit is counted.</div>`;
+  stats.textContent = `Last score: ${totalScore}/${totalPossible} (${percent}%).`;
+}
+
 document.getElementById('checkQuizBtn').addEventListener('click', gradeQuiz);
 document.getElementById('shuffleQuizBtn').addEventListener('click', renderQuiz);
+document.getElementById('checkScenarioBtn').addEventListener('click', gradeScenarioQuiz);
+document.getElementById('shuffleScenarioBtn').addEventListener('click', renderScenarioQuiz);
+document.getElementById('checkEnumBtn').addEventListener('click', gradeEnumQuiz);
+document.getElementById('shuffleEnumBtn').addEventListener('click', renderEnumQuiz);
 
 (function(){
   const root = document.documentElement;
@@ -765,4 +1005,6 @@ document.getElementById('shuffleQuizBtn').addEventListener('click', renderQuiz);
 })();
 
 renderQuiz();
+renderScenarioQuiz();
+renderEnumQuiz();
 </script>
