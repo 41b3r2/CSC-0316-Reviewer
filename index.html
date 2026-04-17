@@ -108,6 +108,10 @@ body{font-family:"Segoe UI",Inter,system-ui,-apple-system,BlinkMacSystemFont,"He
 .quiz-feedback{margin-top:.9rem;font-size:clamp(16px,.6vw + 12px,19px);line-height:1.7;color:var(--text-secondary)}
 .quiz-feedback strong{color:var(--text-primary)}
 h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;margin:.85rem 0 .55rem}
+#quiz .card-title, 
+#scenarioQuiz .card-title, 
+#enumQuiz .card-title {position: sticky;top: 0;background: var(--card-bg);z-index: 10;margin-top: -1rem; padding: 1rem 0 0.5rem 0;}
+.quiz-meta {display: flex;justify-content: space-between;align-items: center;gap: 1rem;flex-wrap: wrap;margin-bottom: .9rem;position: sticky;top: 2.5rem;background: var(--card-bg);z-index: 10;padding-bottom: 1rem;border-bottom: 1px solid var(--border);}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:1024px){
   .reviewer{padding:.8rem}
