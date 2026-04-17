@@ -1,6 +1,11 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSC 0316 Reviewer — Modules 6 & 7</title>
 <style>
- :root{
+:root{
   color-scheme:light;
   --page-bg:#f5f7fb;
   --page-bg-2:#ffffff;
@@ -18,7 +23,9 @@
   --danger-text:#b91c1c;
   --warning-bg:#fff7e6;
   --warning-text:#a16207;
- }
+  --border-radius-lg:12px;
+  --border-radius-md:8px;
+}
 [data-theme="dark"]{
   color-scheme:dark;
   --page-bg:#0b1220;
@@ -37,132 +44,111 @@
   --danger-text:#ffd0d0;
   --warning-bg:#3d2f11;
   --warning-text:#ffe1a6;
- }
+}
 *{box-sizing:border-box;margin:0;padding:0}
-html{font-size:clamp(18px,1vw + 15px,21px)}
-body{font-family:"Segoe UI",Inter,system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;font-size:1.1rem;line-height:1.75;background:linear-gradient(180deg,var(--page-bg),var(--page-bg-2));color:var(--text-primary);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;transition:background .2s ease,color .2s ease}
+html{font-size:clamp(16px,1vw+13px,19px)}
+body{font-family:"Segoe UI",Inter,system-ui,-apple-system,sans-serif;font-size:1rem;line-height:1.75;background:linear-gradient(180deg,var(--page-bg),var(--page-bg-2));color:var(--text-primary);-webkit-font-smoothing:antialiased;transition:background .2s,color .2s}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.reviewer{max-width:1180px;margin:0 auto;padding:1rem 1rem 1.5rem;zoom:1.1}
-.reviewer-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;background:linear-gradient(135deg,var(--card-bg),var(--card-bg-soft));border:1px solid var(--border);border-radius:calc(var(--border-radius-lg) + 2px);padding:1rem 1.1rem;margin-bottom:1rem;box-shadow:0 8px 24px rgba(0,0,0,.08)}
-.reviewer-header h2{font-size:clamp(1.5rem,1.4vw + 1rem,2rem);line-height:1.3;margin-bottom:.25rem;color:var(--text-primary);font-weight:700}
-.reviewer-header p{font-size:clamp(1.15rem,.8vw + .9rem,1.35rem);line-height:1.8;color:var(--text-secondary);max-width:60ch}
+.reviewer{max-width:1180px;margin:0 auto;padding:1rem 1rem 2rem}
+.reviewer-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;background:linear-gradient(135deg,var(--card-bg),var(--card-bg-soft));border:1px solid var(--border);border-radius:var(--border-radius-lg);padding:1rem 1.2rem;margin-bottom:1rem;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.reviewer-header h2{font-size:clamp(1.4rem,1.4vw+.9rem,1.9rem);margin-bottom:.2rem;font-weight:700}
+.reviewer-header p{font-size:clamp(1rem,.8vw+.8rem,1.2rem);color:var(--text-secondary)}
 .header-actions{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;justify-content:flex-end}
-.header-chip{font-size:12px;font-weight:600;padding:.4rem .7rem;border-radius:999px;background:var(--info-bg);color:var(--info-text);border:1px solid var(--border-strong);white-space:nowrap}
-.theme-toggle{font:inherit;font-size:12px;font-weight:700;padding:.45rem .8rem;border-radius:999px;border:1px solid var(--border-strong);background:var(--card-bg);color:var(--text-primary);cursor:pointer;transition:transform .15s ease,box-shadow .15s ease,background .15s ease,color .15s ease,border-color .15s ease}
+.header-chip{font-size:11px;font-weight:600;padding:.35rem .65rem;border-radius:999px;background:var(--info-bg);color:var(--info-text);border:1px solid var(--border-strong);white-space:nowrap}
+.theme-toggle{font:inherit;font-size:11px;font-weight:700;padding:.4rem .75rem;border-radius:999px;border:1px solid var(--border-strong);background:var(--card-bg);color:var(--text-primary);cursor:pointer;transition:transform .15s,box-shadow .15s}
 .theme-toggle:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.08)}
-.theme-toggle:focus-visible{outline:2px solid var(--info-text);outline-offset:2px}
-.tabs{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:1rem;padding:.6rem;background:rgba(255,255,255,.35);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:var(--border-radius-lg);top:.75rem;z-index:5}
-.tab{padding:.8rem 1.1rem;border:1px solid var(--border-strong);border-radius:999px;font-size:clamp(16px,.9vw + 12px,18px);font-weight:600;letter-spacing:.01em;cursor:pointer;background:var(--card-bg);color:var(--text-secondary);transition:transform .15s ease,box-shadow .15s ease,background .15s ease,color .15s ease,border-color .15s ease;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem;padding:.55rem;background:rgba(255,255,255,.35);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:var(--border-radius-lg)}
+.tab{padding:.7rem 1rem;border:1px solid var(--border-strong);border-radius:999px;font-size:clamp(14px,.9vw+11px,16px);font-weight:600;cursor:pointer;background:var(--card-bg);color:var(--text-secondary);transition:transform .15s,box-shadow .15s,background .15s,color .15s;box-shadow:0 1px 2px rgba(0,0,0,.04)}
 .tab:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.06)}
-.tab:focus-visible{outline:2px solid var(--info-text);outline-offset:2px}
-.tab.active{background:var(--info-bg);color:var(--info-text);border-color:var(--border-strong);font-weight:600;box-shadow:0 6px 16px rgba(0,0,0,.08)}
+.tab.active{background:var(--info-bg);color:var(--info-text);border-color:var(--border-strong);font-weight:700;box-shadow:0 6px 16px rgba(0,0,0,.08)}
 .section{display:none;animation:fadeIn .18s ease-out}
 .section.active{display:block}
-.card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--border-radius-lg);padding:1rem 1.15rem;margin-bottom:1rem;box-shadow:0 8px 20px rgba(0,0,0,.04)}
-.card:hover{box-shadow:0 10px 24px rgba(0,0,0,.05)}
-.card-title{font-size:clamp(18px,1vw + 14px,21px);font-weight:700;color:var(--text-primary);margin-bottom:.95rem;padding-bottom:.55rem;border-bottom:1px solid var(--border)}
-.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;margin-bottom:.5rem;letter-spacing:.02em}
+.card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--border-radius-lg);padding:.95rem 1.1rem;margin-bottom:1rem;box-shadow:0 8px 20px rgba(0,0,0,.04)}
+.card-title{font-size:clamp(16px,1vw+12px,19px);font-weight:700;color:var(--text-primary);margin-bottom:.85rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;margin-bottom:.45rem}
 .badge-blue{background:var(--info-bg);color:var(--info-text)}
 .badge-green{background:var(--success-bg);color:var(--success-text)}
 .badge-red{background:var(--danger-bg);color:var(--danger-text)}
 .badge-warn{background:var(--warning-bg);color:var(--warning-text)}
-.term{display:flex;gap:.7rem;margin-bottom:.75rem;font-size:clamp(17px,.8vw + 13px,20px);line-height:1.85}
+.term{display:flex;gap:.65rem;margin-bottom:.7rem;font-size:clamp(15px,.8vw+11px,17px);line-height:1.8}
 .term-label{font-weight:600;color:var(--text-primary);min-width:130px;flex-shrink:0}
 .term-def{color:var(--text-secondary)}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.acro{font-size:clamp(16px,.6vw + 12px,19px);background:var(--card-bg-soft);border:1px solid var(--border);border-radius:var(--border-radius-md);padding:.7rem .9rem;margin-bottom:.6rem;line-height:1.6}
+.acro{font-size:clamp(14px,.6vw+11px,17px);background:var(--card-bg-soft);border:1px solid var(--border);border-radius:var(--border-radius-md);padding:.65rem .85rem;margin-bottom:.55rem;line-height:1.6}
 .acro strong{color:var(--text-primary)}
 .acro span{color:var(--text-secondary)}
-.tip{background:linear-gradient(90deg,var(--warning-bg),rgba(255,193,7,.12));border-left:3px solid var(--border-strong);padding:.8rem .95rem;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:clamp(16px,.6vw + 12px,19px);color:var(--warning-text);margin-top:.8rem;line-height:1.65}
-.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-radius:var(--border-radius-md);overflow:hidden;margin-bottom:.75rem}
-.compare-cell{background:var(--card-bg);padding:.8rem .95rem;font-size:clamp(16px,.6vw + 12px,19px);color:var(--text-secondary);line-height:1.8}
-.compare-head{background:var(--card-bg-soft);font-weight:600;font-size:clamp(16px,.6vw + 12px,19px);color:var(--text-primary)}
-.list-item{font-size:clamp(17px,.8vw + 13px,20px);color:var(--text-secondary);padding:.48rem 0;line-height:1.8;border-bottom:1px solid var(--border)}
+.tip{background:linear-gradient(90deg,var(--warning-bg),rgba(255,193,7,.1));border-left:3px solid var(--border-strong);padding:.75rem .9rem;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:clamp(14px,.6vw+11px,17px);color:var(--warning-text);margin-top:.75rem;line-height:1.65}
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-radius:var(--border-radius-md);overflow:hidden;margin-bottom:.65rem}
+.compare-cell{background:var(--card-bg);padding:.75rem .9rem;font-size:clamp(14px,.6vw+11px,17px);color:var(--text-secondary);line-height:1.75}
+.compare-head{background:var(--card-bg-soft);font-weight:600;font-size:clamp(14px,.6vw+11px,17px);color:var(--text-primary)}
+.list-item{font-size:clamp(15px,.8vw+11px,17px);color:var(--text-secondary);padding:.44rem 0;line-height:1.75;border-bottom:1px solid var(--border)}
 .list-item:last-child{border-bottom:none}
 .list-item strong{color:var(--text-primary)}
-.quiz-meta{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.9rem}
-.quiz-stats{font-size:clamp(16px,.6vw + 12px,19px);color:var(--text-secondary)}
-.quiz-actions{display:flex;gap:.5rem;flex-wrap:wrap}
-.quiz-btn{font:inherit;font-size:clamp(16px,.6vw + 12px,19px);font-weight:700;padding:.75rem 1.1rem;border-radius:999px;border:1px solid var(--border-strong);cursor:pointer;background:var(--card-bg-soft);color:var(--text-primary);transition:transform .15s ease,box-shadow .15s ease,background .15s ease,border-color .15s ease}
+.quiz-meta{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.85rem}
+.quiz-stats{font-size:clamp(14px,.6vw+11px,17px);color:var(--text-secondary)}
+.quiz-actions{display:flex;gap:.45rem;flex-wrap:wrap}
+.quiz-btn{font:inherit;font-size:clamp(14px,.6vw+11px,17px);font-weight:700;padding:.7rem 1rem;border-radius:999px;border:1px solid var(--border-strong);cursor:pointer;background:var(--card-bg-soft);color:var(--text-primary);transition:transform .15s,box-shadow .15s}
 .quiz-btn:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.08)}
-.quiz-btn:focus-visible{outline:2px solid var(--info-text);outline-offset:2px}
 .quiz-btn.primary{background:var(--info-bg);color:var(--info-text)}
-.quiz-score{margin-bottom:1rem;padding:1rem 1.1rem;border-radius:var(--border-radius-md);border:1px solid var(--border);background:var(--card-bg-soft);color:var(--text-primary);font-weight:700;font-size:clamp(16px,.6vw + 12px,19px);display:none}
+.quiz-score{margin-bottom:1rem;padding:.9rem 1rem;border-radius:var(--border-radius-md);border:1px solid var(--border);background:var(--card-bg-soft);color:var(--text-primary);font-weight:700;font-size:clamp(14px,.6vw+11px,17px);display:none}
 .quiz-score.show{display:block}
-.quiz-note{margin-top:.35rem;font-size:clamp(16px,.6vw + 12px,19px);font-weight:600;color:var(--text-secondary)}
-.quiz-list{display:grid;gap:.9rem}
-.quiz-item{border:1px solid var(--border);border-radius:var(--border-radius-lg);background:var(--card-bg);padding:1rem}
-.quiz-item.correct{border-color:var(--success-text);box-shadow:0 0 0 1px rgba(0,0,0,0)}
+.quiz-note{margin-top:.3rem;font-size:clamp(13px,.5vw+10px,15px);font-weight:600;color:var(--text-secondary)}
+.quiz-list{display:grid;gap:.85rem}
+.quiz-item{border:1px solid var(--border);border-radius:var(--border-radius-lg);background:var(--card-bg);padding:.9rem}
+.quiz-item.correct{border-color:var(--success-text)}
 .quiz-item.wrong{border-color:var(--danger-text)}
-.quiz-q{font-size:clamp(17px,.8vw + 13px,20px);font-weight:700;color:var(--text-primary);line-height:1.65;margin-bottom:.9rem}
-.quiz-choices{display:grid;gap:.45rem}
-.quiz-choice{display:flex;align-items:flex-start;gap:.6rem;padding:.68rem .75rem;border:1px solid var(--border);border-radius:var(--border-radius-md);background:var(--card-bg-soft);cursor:pointer;transition:background .15s ease,border-color .15s ease}
+.quiz-q{font-size:clamp(15px,.8vw+11px,17px);font-weight:700;color:var(--text-primary);line-height:1.6;margin-bottom:.85rem}
+.quiz-choices{display:grid;gap:.4rem}
+.quiz-choice{display:flex;align-items:flex-start;gap:.55rem;padding:.62rem .7rem;border:1px solid var(--border);border-radius:var(--border-radius-md);background:var(--card-bg-soft);cursor:pointer;transition:background .15s,border-color .15s}
 .quiz-choice:hover{border-color:var(--border-strong)}
 .quiz-choice input{margin-top:.15rem;accent-color:var(--info-text)}
-.quiz-choice input[type="text"]{width:100%;margin-top:0;padding:.7rem .8rem;border:1px solid var(--border-strong);border-radius:var(--border-radius-md);background:var(--card-bg);color:var(--text-primary);font:inherit;line-height:1.5;accent-color:initial}
-.quiz-choice input[type="text"]::placeholder{color:var(--text-secondary)}
-.quiz-choice span{color:var(--text-secondary);line-height:1.6;font-size:clamp(16px,.6vw + 12px,19px)}
+.quiz-choice span{color:var(--text-secondary);line-height:1.55;font-size:clamp(14px,.6vw+11px,16px)}
 .quiz-choice.correct{border-color:var(--success-text);background:var(--success-bg)}
 .quiz-choice.wrong{border-color:var(--danger-text);background:var(--danger-bg)}
-.quiz-feedback{margin-top:.9rem;font-size:clamp(16px,.6vw + 12px,19px);line-height:1.7;color:var(--text-secondary)}
+.quiz-feedback{margin-top:.85rem;font-size:clamp(14px,.6vw+11px,16px);line-height:1.65;color:var(--text-secondary)}
 .quiz-feedback strong{color:var(--text-primary)}
-h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;margin:.85rem 0 .55rem}
+h3{font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;margin:.8rem 0 .5rem}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:1024px){
-  .reviewer{padding:.8rem}
-  .card-title{font-size:20px}
-  .term,.compare-cell,.list-item,.acro,.quiz-q,.quiz-feedback,.quiz-stats,.quiz-note,.quiz-score{font-size:19px}
-}
 @media(max-width:760px){
-  html{font-size:21px}
-  body{font-size:1.38rem;line-height:1.95}
+  html{font-size:18px}
   .reviewer{padding:.65rem}
-  .reviewer-header{flex-direction:column;padding:.95rem .95rem}
-  .reviewer-header h2{font-size:2.52rem}
-  .reviewer-header p{font-size:1.86rem;line-height:2}
-  .header-actions{justify-content:flex-start}
-  .header-chip,.theme-toggle{font-size:22px;padding:.84rem 1.26rem}
-  .tabs{top:.5rem;padding:.5rem}
-  .tab{font-size:22px;padding:1.14rem 1.44rem}
-  .card{padding:.95rem 1rem}
-  .card-title{font-size:25px}
-  .term,.compare-cell,.list-item,.acro,.quiz-q,.quiz-feedback,.quiz-stats,.quiz-note,.quiz-score{font-size:25px;line-height:2}
-  .quiz-btn{font-size:24px;padding:1.14rem 1.5rem}
+  .reviewer-header{flex-direction:column}
+  .tab{font-size:15px;padding:.9rem 1.1rem}
   .term{flex-direction:column;gap:2px}
   .term-label{min-width:unset}
-  .compare-head{font-size:24px}
-  .quiz-choice span{font-size:25px;line-height:1.85}
-  .quiz-choice{padding:1.2rem 1.26rem}
+  .two-col{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){.section,.tab{animation:none;transition:none}.tab:hover{transform:none}}
 </style>
-
+</head>
+<body>
 <div class="reviewer">
-<h2 class="sr-only">CSC 0316 Reviewer — Modules 6 and 7: IAM and Security Assessment</h2>
+<h2 class="sr-only">CSC 0316 Reviewer — Modules 6 and 7</h2>
 
 <div class="reviewer-header">
   <div>
     <h2>CSC 0316 Reviewer</h2>
-    <p>Clean, easy-to-scan reviewer for Modules 6 and 7 with refined spacing, softer contrast, and better tab navigation.</p>
+    <p>Modules 6 (IAM) and 7 (Security Assessment) — 100 questions per module quiz</p>
   </div>
   <div class="header-actions">
     <div class="header-chip">Modules 6–7</div>
-    <button class="theme-toggle" type="button" id="themeToggle" aria-label="Toggle dark mode">Dark mode</button>
+    <div class="header-chip">100 Qs / Module</div>
+    <button class="theme-toggle" type="button" id="themeToggle">Dark mode</button>
   </div>
 </div>
 
 <div class="tabs">
-  <button class="tab active" onclick="show(event, 'mod6-iam')">Module 6: IAM</button>
-  <button class="tab" onclick="show(event, 'mod6-protocols')">Protocols & Auth</button>
-  <button class="tab" onclick="show(event, 'mod7-assess')">Module 7: Assessment</button>
-  <button class="tab" onclick="show(event, 'mod7-pentest')">Pentest & Teams</button>
-  <button class="tab" onclick="show(event, 'mod7-audit')">Audit & Output</button>
-  <button class="tab" onclick="show(event, 'quiz')">MCQ Quiz 50 Items</button>
-  <button class="tab" onclick="show(event, 'scenarioQuiz')">Scenario Quiz</button>
-  <button class="tab" onclick="show(event, 'enumQuiz')">Enumeration Quiz</button>
-  <button class="tab" onclick="show(event, 'acros')">Acronyms</button>
+  <button class="tab active" onclick="show(event,'mod6-iam')">Module 6: IAM</button>
+  <button class="tab" onclick="show(event,'mod6-protocols')">Protocols & Auth</button>
+  <button class="tab" onclick="show(event,'mod7-assess')">Module 7: Assessment</button>
+  <button class="tab" onclick="show(event,'mod7-pentest')">Pentest & Teams</button>
+  <button class="tab" onclick="show(event,'mod7-audit')">Audit & Output</button>
+  <button class="tab" onclick="show(event,'quiz6')">Quiz — Module 6 (100)</button>
+  <button class="tab" onclick="show(event,'quiz7')">Quiz — Module 7 (100)</button>
+  <button class="tab" onclick="show(event,'acros')">Acronyms</button>
 </div>
 
+<!-- ===== MODULE 6 IAM ===== -->
 <div id="mod6-iam" class="section active">
   <div class="card">
     <div class="card-title">What is IAM?</div>
@@ -173,7 +159,15 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
     <div class="term"><span class="term-label">Authorization</span><span class="term-def">What you are allowed to do.</span></div>
     <div class="term"><span class="term-label">Accounting/Auditing</span><span class="term-def">Tracking what you did.</span></div>
   </div>
-
+  <div class="card">
+    <div class="card-title">Assets to Protect (Physical & Logical Access)</div>
+    <div class="list-item"><strong>Information</strong> — all data of the organization</div>
+    <div class="list-item"><strong>Systems</strong> — all hardware of IT</div>
+    <div class="list-item"><strong>Devices</strong> — compute nodes including BYOD</div>
+    <div class="list-item"><strong>Facilities</strong> — physical locations owned or rented</div>
+    <div class="list-item"><strong>Applications</strong> — programs performing specific functions</div>
+    <div class="list-item"><strong>Services</strong> — software components providing specific functions</div>
+  </div>
   <div class="card">
     <div class="card-title">Access Controls (10 Types)</div>
     <div class="list-item"><strong>Preventative</strong> — stops incidents before they happen</div>
@@ -187,37 +181,32 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
     <div class="list-item"><strong>Technical/Logical</strong> — software & hardware controls</div>
     <div class="list-item"><strong>Physical</strong> — physical barriers and controls</div>
   </div>
-
   <div class="card">
     <div class="card-title">Access Models</div>
     <div class="term"><span class="term-label">RuBAC</span><span class="term-def">Rule-Based Access Control — access decided by predefined rules/conditions. Supports dynamic & fine-grained control.</span></div>
-    <div class="term"><span class="term-label">ABAC</span><span class="term-def">Attribute-Based Access Control — decisions based on attributes of users, resources, and environment. More flexible than roles alone.</span></div>
-    <div class="term"><span class="term-label">Risk-Based AC</span><span class="term-def">Dynamically adjusts permissions based on risk level of the access request (sensitivity, behavior, security posture).</span></div>
+    <div class="term"><span class="term-label">ABAC</span><span class="term-def">Attribute-Based Access Control — decisions based on attributes of users, resources, and environment.</span></div>
+    <div class="term"><span class="term-label">Risk-Based AC</span><span class="term-def">Dynamically adjusts permissions based on risk level of the access request.</span></div>
     <div class="term"><span class="term-label">PEP</span><span class="term-def">Policy Enforcement Point — intercepts requests and enforces policies.</span></div>
     <div class="term"><span class="term-label">PDP</span><span class="term-def">Policy Decision Point — evaluates policies and makes allow/deny decisions.</span></div>
     <div class="term"><span class="term-label">PIP</span><span class="term-def">Policy Information Point — provides attribute info to PDPs.</span></div>
     <div class="term"><span class="term-label">PAP</span><span class="term-def">Policy Administration Point — where admins define and manage access policies.</span></div>
   </div>
-
   <div class="card">
-    <div class="card-title">Provisioning & Account Lifecycle</div>
-    <div class="term"><span class="term-label">Provisioning</span><span class="term-def">Onboarding — adding a user to the IAM system and granting access.</span></div>
-    <div class="term"><span class="term-label">Deprovisioning</span><span class="term-def">Offboarding — removing a user: disable/delete account, revoke certs, cancel access codes, return equipment.</span></div>
-    <div class="term"><span class="term-label">Privilege Creep</span><span class="term-def">When users accumulate access rights over time beyond what they need. Account management/reviews help guard against this.</span></div>
-    <div class="term"><span class="term-label">Account Access Review</span><span class="term-def">Verifies accounts don't have excessive privileges; ensures policies are followed; confirms accounts are disabled/deleted as required.</span></div>
-    <div class="tip">Exam tip: Deprovisioning issues arise when employees are "tipped off" early — e.g., IT requests equipment back prematurely, which is a security risk.</div>
+    <div class="card-title">Provisioning & Deprovisioning</div>
+    <div class="term"><span class="term-label">Provisioning</span><span class="term-def">Onboarding — adding a user and granting access.</span></div>
+    <div class="term"><span class="term-label">Deprovisioning</span><span class="term-def">Offboarding — disable/delete account, revoke certs, cancel access codes, return equipment.</span></div>
+    <div class="term"><span class="term-label">Privilege Creep</span><span class="term-def">When users accumulate access rights beyond what they need over time.</span></div>
+    <div class="tip">Security risk: employees "tipped off" before deprovisioning (premature equipment return, disabled accounts, revoked badges, leaked reorganization chart).</div>
   </div>
-
   <div class="card">
     <div class="card-title">Service Accounts</div>
-    <div class="term"><span class="term-label">Definition</span><span class="term-def">Also called application accounts. Digital identity used by software/services to interact with other apps or the OS. Often used for machine-to-machine (API) communication.</span></div>
-    <h3>Attack vectors on service accounts</h3>
-    <div class="term"><span class="term-label">Privilege Escalation</span><span class="term-def">Attacker impersonates the account to elevate privileges.</span></div>
-    <div class="term"><span class="term-label">Spoofing</span><span class="term-def">Impersonates the account to hide identity.</span></div>
-    <div class="term"><span class="term-label">Non-repudiation</span><span class="term-def">Uses account to hide actions performed on the system.</span></div>
-    <div class="term"><span class="term-label">Information Disclosure</span><span class="term-def">Extracts infrastructure information via the service account.</span></div>
+    <div class="term"><span class="term-label">Definition</span><span class="term-def">Also called application accounts. Digital identity used by software/services for app-to-app or API communication.</span></div>
+    <h3>Attack vectors</h3>
+    <div class="list-item"><strong>Privilege Escalation</strong> — impersonate account to elevate privileges</div>
+    <div class="list-item"><strong>Spoofing</strong> — impersonate account to hide identity</div>
+    <div class="list-item"><strong>Non-repudiation</strong> — hide actions using the service account</div>
+    <div class="list-item"><strong>Information Disclosure</strong> — extract infrastructure info via service account</div>
   </div>
-
   <div class="card">
     <div class="card-title">Session Management</div>
     <div class="term"><span class="term-label">Session Creation</span><span class="term-def">Session IDs identify the session.</span></div>
@@ -230,12 +219,13 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
   </div>
 </div>
 
+<!-- ===== MODULE 6 PROTOCOLS ===== -->
 <div id="mod6-protocols" class="section">
   <div class="card">
-    <div class="card-title">FIM — Federated Identity Management</div>
+    <div class="card-title">Federated Identity Management (FIM)</div>
     <div class="term"><span class="term-label">IdP</span><span class="term-def">Identity Provider — authenticates users and issues security tokens.</span></div>
     <div class="term"><span class="term-label">SP</span><span class="term-def">Service Provider — hosts services; relies on IdP tokens to grant access.</span></div>
-    <div class="term"><span class="term-label">Security Token</span><span class="term-def">Issued by IdP after authentication; contains identity and permissions (SAML or JWT format).</span></div>
+    <div class="term"><span class="term-label">Security Token</span><span class="term-def">Issued by IdP after authentication; contains identity and permissions (SAML or JWT).</span></div>
     <div class="term"><span class="term-label">Federation Protocol</span><span class="term-def">Standardized comms between IdP and SP — OpenID Connect, OAuth.</span></div>
     <h3>FIM deployment options</h3>
     <div class="term"><span class="term-label">On-premise</span><span class="term-def">All FIM software on-site.</span></div>
@@ -247,128 +237,59 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
     <div class="list-item"><strong>Interoperability</strong> — seamless integration across domains</div>
     <div class="list-item"><strong>Reduced Admin Overhead</strong> — streamlined provisioning/deprovisioning</div>
   </div>
-
   <div class="card">
     <div class="card-title">SSO vs JIT</div>
-    <div class="compare-row">
-      <div class="compare-cell compare-head">SSO (Single Sign-On)</div>
-      <div class="compare-cell compare-head">JIT (Just-In-Time)</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Authenticate once → access multiple apps</div>
-      <div class="compare-cell">Temporary access granted only when needed</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Reduces password fatigue</div>
-      <div class="compare-cell">Follows least privilege principle</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Risk: single point of failure</div>
-      <div class="compare-cell">Reduces insider threat risk</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Easier user access management</div>
-      <div class="compare-cell">Dynamic provisioning based on context</div>
-    </div>
+    <div class="compare-row"><div class="compare-cell compare-head">SSO</div><div class="compare-cell compare-head">JIT</div></div>
+    <div class="compare-row"><div class="compare-cell">Authenticate once → access multiple apps</div><div class="compare-cell">Temporary access granted only when needed</div></div>
+    <div class="compare-row"><div class="compare-cell">Reduces password fatigue</div><div class="compare-cell">Follows least privilege principle</div></div>
+    <div class="compare-row"><div class="compare-cell">Risk: single point of failure</div><div class="compare-cell">Reduces insider threat risk</div></div>
+    <div class="compare-row"><div class="compare-cell">Easier user access management</div><div class="compare-cell">Dynamic provisioning based on context</div></div>
   </div>
-
   <div class="card">
-    <div class="card-title">OAuth 2.0, OpenID, OIDC</div>
-    <div class="term"><span class="term-label">OAuth 2.0</span><span class="term-def">Open Authorization. RFC 6749, maintained by IETF. Used to share account info with 3rd party sites. NOT backward compatible with OAuth 1.0.</span></div>
-    <div class="term"><span class="term-label">OpenID</span><span class="term-def">Open standard by OpenID Foundation. Decentralized authentication — one set of credentials for multiple sites via an OpenID Provider.</span></div>
-    <div class="term"><span class="term-label">OIDC</span><span class="term-def">OpenID Connect — authentication layer ON TOP of OAuth 2.0. Both auth & authorization. Uses JWT. Example: logging into eBay with your Google account.</span></div>
-    <div class="tip">Exam tip: OAuth = authorization only. OpenID = authentication only. OIDC = both.</div>
+    <div class="card-title">OAuth 2.0 / OpenID / OIDC</div>
+    <div class="term"><span class="term-label">OAuth 2.0</span><span class="term-def">Open Authorization. RFC 6749, maintained by IETF. Shares account info with 3rd party sites. NOT backward compatible with OAuth 1.0.</span></div>
+    <div class="term"><span class="term-label">OpenID</span><span class="term-def">Open standard by OpenID Foundation. Decentralized authentication — one set of credentials for multiple sites.</span></div>
+    <div class="term"><span class="term-label">OIDC</span><span class="term-def">OpenID Connect — authentication layer ON TOP of OAuth 2.0. Both auth & authorization. Uses JWT. Example: eBay with Google account.</span></div>
+    <div class="tip">OAuth = authorization only. OpenID = authentication only. OIDC = both.</div>
   </div>
-
   <div class="card">
-    <div class="card-title">SAML</div>
-    <div class="term"><span class="term-label">Full Name</span><span class="term-def">Security Assertion Markup Language — based on XML. Used to exchange auth/authorization info between federated orgs. Often used for browser-based SSO.</span></div>
+    <div class="card-title">SAML & Kerberos</div>
+    <div class="term"><span class="term-label">SAML</span><span class="term-def">Security Assertion Markup Language — based on XML. Exchanges auth/authorization info between federated orgs. Used for browser-based SSO.</span></div>
     <h3>SAML 2.0 entities</h3>
-    <div class="term"><span class="term-label">Principal / User Agent</span><span class="term-def">The user trying to access an account.</span></div>
+    <div class="term"><span class="term-label">Principal/User Agent</span><span class="term-def">The user trying to access an account.</span></div>
     <div class="term"><span class="term-label">Service Provider (SP)</span><span class="term-def">The website the user is accessing.</span></div>
     <div class="term"><span class="term-label">Identity Provider (IdP)</span><span class="term-def">Third party holding the user's auth and authorization info.</span></div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Kerberos</div>
-    <div class="term"><span class="term-label">Type</span><span class="term-def">SSO system used within networks. Ticket authentication mechanism using a trusted third party.</span></div>
+    <h3>Kerberos</h3>
     <div class="term"><span class="term-label">KDC</span><span class="term-def">Key Distribution Center — trusted third party; all clients/servers register here.</span></div>
     <div class="term"><span class="term-label">Auth Server</span><span class="term-def">Hosts KDC functions; verifies authenticity and timeliness of tickets.</span></div>
     <div class="term"><span class="term-label">Ticket</span><span class="term-def">Encrypted message proving subject is permitted to access an object.</span></div>
-    <div class="term"><span class="term-label">TGT</span><span class="term-def">Ticket-Granting Ticket — proof that subject authenticated via KDC and can request access to other objects.</span></div>
+    <div class="term"><span class="term-label">TGT</span><span class="term-def">Ticket-Granting Ticket — proof that subject authenticated via KDC.</span></div>
     <div class="term"><span class="term-label">Kerberos Realm</span><span class="term-def">A logical area controlled by Kerberos.</span></div>
   </div>
-
   <div class="card">
     <div class="card-title">RADIUS vs TACACS+</div>
-    <div class="compare-row">
-      <div class="compare-cell compare-head">RADIUS</div>
-      <div class="compare-cell compare-head">TACACS+</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Remote Authentication Dial-in User Service</div>
-      <div class="compare-cell">Terminal Access Controller Access Control System Plus (Cisco)</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Uses UDP</div>
-      <div class="compare-cell">Uses TCP port 49</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Only encrypts password exchange</div>
-      <div class="compare-cell">Encrypts ALL authentication info by default</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">AAA combined in one process</div>
-      <div class="compare-cell">AAA separated into distinct processes (can run on separate servers)</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Used for centralized remote access / VPN auth</div>
-      <div class="compare-cell">Improvement over RADIUS by Cisco</div>
-    </div>
-    <div class="tip">Exam tip: TACACS+ = more secure (full encryption), more flexible (separate AAA). RADIUS = simpler, UDP, password-only encryption.</div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Credential Management</div>
-    <div class="list-item"><strong>Secure Storage</strong> — encrypted vaults for credentials</div>
-    <div class="list-item"><strong>Centralized Repository</strong> — single place for all credentials</div>
-    <div class="list-item"><strong>Password Generation</strong> — creates strong passwords</div>
-    <div class="list-item"><strong>Auto-fill / Auto-login</strong> — convenience features</div>
-    <div class="list-item"><strong>MFA Integration</strong> — supports multi-factor auth</div>
-    <div class="list-item"><strong>Access Control</strong> — who can access what credential</div>
-    <div class="list-item"><strong>Audit Trails and Reporting</strong> — log all access events</div>
-    <div class="list-item"><strong>Cross-Platform Support</strong> — works across devices</div>
-    <div class="list-item"><strong>Secure Sharing</strong> — share creds without exposing plaintext</div>
-    <div class="list-item"><strong>Password Health Monitoring</strong> — flags weak/reused/breached passwords</div>
+    <div class="compare-row"><div class="compare-cell compare-head">RADIUS</div><div class="compare-cell compare-head">TACACS+</div></div>
+    <div class="compare-row"><div class="compare-cell">Remote Authentication Dial-in User Service</div><div class="compare-cell">Terminal Access Controller Access Control System Plus (Cisco)</div></div>
+    <div class="compare-row"><div class="compare-cell">Uses UDP</div><div class="compare-cell">Uses TCP port 49</div></div>
+    <div class="compare-row"><div class="compare-cell">Only encrypts password exchange</div><div class="compare-cell">Encrypts ALL authentication info by default</div></div>
+    <div class="compare-row"><div class="compare-cell">AAA combined in one process</div><div class="compare-cell">AAA separated (can run on separate servers)</div></div>
+    <div class="tip">TACACS+ = more secure (full encryption), more flexible (separate AAA). RADIUS = simpler, UDP, password-only encryption.</div>
   </div>
 </div>
 
+<!-- ===== MODULE 7 ASSESS ===== -->
 <div id="mod7-assess" class="section">
   <div class="card">
     <div class="card-title">Security Testing vs Assessment vs Audit</div>
-    <div class="compare-row">
-      <div class="compare-cell compare-head">Security Testing</div>
-      <div class="compare-cell compare-head">Security Assessment</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Verifies controls are functioning properly</div>
-      <div class="compare-cell">Comprehensive review — goes beyond testing</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Should be on a regular schedule</div>
-      <div class="compare-cell">Includes risk and threat environment reviews</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Focused on specific controls</div>
-      <div class="compare-cell">Assessment report often required</div>
-    </div>
-    <div style="height:.5rem"></div>
-    <div class="term"><span class="term-label">Security Audit</span><span class="term-def">Similar to assessment but performed by independent auditors. Can be internal, external, or third-party.</span></div>
-    <div class="tip">Key distinction: Testing = verify controls. Assessment = comprehensive + risk. Audit = assessment done by independent auditors.</div>
+    <div class="compare-row"><div class="compare-cell compare-head">Security Testing</div><div class="compare-cell compare-head">Security Assessment</div></div>
+    <div class="compare-row"><div class="compare-cell">Verifies controls are functioning properly</div><div class="compare-cell">Comprehensive review — goes beyond testing</div></div>
+    <div class="compare-row"><div class="compare-cell">Should be on a regular schedule</div><div class="compare-cell">Includes risk and threat environment reviews</div></div>
+    <div class="compare-row"><div class="compare-cell">Focused on specific controls</div><div class="compare-cell">Assessment report often required</div></div>
+    <div class="term" style="margin-top:.75rem"><span class="term-label">Security Audit</span><span class="term-def">Similar to assessment but performed by independent auditors.</span></div>
+    <div class="tip">Testing = verify controls. Assessment = comprehensive + risk. Audit = assessment by independent auditors.</div>
   </div>
-
   <div class="card">
-    <div class="card-title">Scheduling Security Tests — Factors to Consider</div>
+    <div class="card-title">Scheduling Security Tests — 10 Factors</div>
     <div class="list-item">Availability of testing resources</div>
     <div class="list-item">Criticality of the systems being protected</div>
     <div class="list-item">Sensitivity of data on systems</div>
@@ -380,18 +301,16 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
     <div class="list-item">Difficulty and time required to perform the test</div>
     <div class="list-item">Impact of test on normal business operations</div>
   </div>
-
   <div class="card">
-    <div class="card-title">NIST Assessment Framework (NIST SP 800-53A)</div>
+    <div class="card-title">NIST SP 800-53A — 4 Assessment Components</div>
     <div class="term"><span class="term-label">Specifications</span><span class="term-def">Documents associated with the system being audited.</span></div>
     <div class="term"><span class="term-label">Mechanisms</span><span class="term-def">Controls used within an information system to meet the specifications.</span></div>
     <div class="term"><span class="term-label">Activities</span><span class="term-def">Actions carried out by people within the information system.</span></div>
     <div class="term"><span class="term-label">Individuals</span><span class="term-def">People who implement specifications, mechanisms, and activities.</span></div>
   </div>
-
   <div class="card">
     <div class="card-title">Vulnerability Assessment</div>
-    <div class="term"><span class="term-label">Purpose</span><span class="term-def">Discovers system weaknesses. Tests are commonly automated and help build a remediation roadmap.</span></div>
+    <div class="term"><span class="term-label">Purpose</span><span class="term-def">Discovers system weaknesses. Commonly automated. Helps build a remediation roadmap.</span></div>
     <div class="term"><span class="term-label">SCAP</span><span class="term-def">Security Content Automation Protocol — NIST initiative providing standards around vulnerabilities.</span></div>
     <div class="term"><span class="term-label">CVE</span><span class="term-def">Common Vulnerabilities and Exposures — standard identifiers for known vulnerabilities.</span></div>
     <div class="term"><span class="term-label">CVSS</span><span class="term-def">Common Vulnerability Scoring System — scores severity of vulnerabilities.</span></div>
@@ -401,23 +320,19 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
     <div class="list-item">Web app vulnerability scans</div>
     <div class="list-item">Database vulnerability scans</div>
   </div>
-
   <div class="card">
     <div class="card-title">Other Common Tests</div>
-    <div class="term"><span class="term-label">Log Reviews</span><span class="term-def">Important for assessing security infrastructure. SIEMs used; NTP syncs time across devices for log correlation.</span></div>
+    <div class="term"><span class="term-label">Log Reviews</span><span class="term-def">SIEMs used; NTP syncs time across devices for log correlation.</span></div>
     <div class="term"><span class="term-label">Synthetic Transactions</span><span class="term-def">Simulating traffic (often via scripts) to test system behavior.</span></div>
     <div class="term"><span class="term-label">Code Review</span><span class="term-def">Testing software as part of the development process.</span></div>
     <div class="term"><span class="term-label">Misuse Case Testing</span><span class="term-def">Testing how a system behaves when misused.</span></div>
-    <div class="term"><span class="term-label">Coverage Analysis</span><span class="term-def">Ensures testing covers all intended areas of the system.</span></div>
+    <div class="term"><span class="term-label">Coverage Analysis</span><span class="term-def">Ensures testing covers all intended areas.</span></div>
     <div class="term"><span class="term-label">Breach & Attack Simulations</span><span class="term-def">Simulated attacks to test defenses.</span></div>
     <div class="term"><span class="term-label">Compliance Checks</span><span class="term-def">Verifying adherence to standards.</span></div>
     <div class="term"><span class="term-label">Interface Testing</span><span class="term-def">Testing APIs, UIs, and integration points.</span></div>
   </div>
-
   <div class="card">
-    <div class="card-title">Collecting Security Process Data</div>
-    <div class="term"><span class="term-label">Account Management</span><span class="term-def">Collect data to ensure users have correct authorization levels. Guards against privilege creep.</span></div>
-    <h3>Key Performance & Risk Indicators (KPIs/KRIs)</h3>
+    <div class="card-title">Collecting Security Process Data — KPIs / KRIs</div>
     <div class="list-item">Number of Open Vulnerabilities</div>
     <div class="list-item">Time to Resolve</div>
     <div class="list-item">Rate of Occurrence</div>
@@ -427,147 +342,91 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
   </div>
 </div>
 
+<!-- ===== MODULE 7 PENTEST ===== -->
 <div id="mod7-pentest" class="section">
   <div class="card">
     <div class="card-title">Penetration Testing Types</div>
-    <div class="compare-row">
-      <div class="compare-cell compare-head">Type</div>
-      <div class="compare-cell compare-head">Description</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell"><strong>Black Box</strong></div>
-      <div class="compare-cell">Tester has zero knowledge of the system — simulates an external attacker.</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell"><strong>White Box</strong></div>
-      <div class="compare-cell">Tester has full knowledge — source code, architecture, credentials. Most thorough.</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell"><strong>Gray Box</strong></div>
-      <div class="compare-cell">Tester has partial knowledge — simulates an insider or partially informed attacker.</div>
-    </div>
-    <div class="tip">Memory trick: Black = zero info (no light). White = full info (full light). Gray = somewhere in between.</div>
+    <div class="compare-row"><div class="compare-cell compare-head">Type</div><div class="compare-cell compare-head">Description</div></div>
+    <div class="compare-row"><div class="compare-cell"><strong>Black Box</strong></div><div class="compare-cell">Zero knowledge — simulates external attacker.</div></div>
+    <div class="compare-row"><div class="compare-cell"><strong>White Box</strong></div><div class="compare-cell">Full knowledge — source code, architecture, credentials. Most thorough.</div></div>
+    <div class="compare-row"><div class="compare-cell"><strong>Gray Box</strong></div><div class="compare-cell">Partial knowledge — simulates insider or partially informed attacker.</div></div>
+    <div class="tip">Black = zero info. White = full info. Gray = in between.</div>
   </div>
-
   <div class="card">
-    <div class="card-title">Red Team vs Blue Team vs Purple Team</div>
-    <div class="compare-row">
-      <div class="compare-cell compare-head">Red Team (Attack)</div>
-      <div class="compare-cell compare-head">Blue Team (Defend)</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Ethical Hacker / Pentester</div>
-      <div class="compare-cell">SOC Analyst (Level 1–3)</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Exploit Developer</div>
-      <div class="compare-cell">Incident Response (IR Analyst)</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Bug Bounty Hunter</div>
-      <div class="compare-cell">Threat Hunter</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell">Physical Security Pentester</div>
-      <div class="compare-cell">Digital Forensic Analyst</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell"></div>
-      <div class="compare-cell">Threat Intelligence Analyst</div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-cell"></div>
-      <div class="compare-cell">Vulnerability Management Analyst</div>
-    </div>
-    <h3>Tools</h3>
-    <div class="compare-row">
-      <div class="compare-cell"><strong>Red:</strong> Nmap, Metasploit, Kali Linux</div>
-      <div class="compare-cell"><strong>Blue:</strong> SIEM (QRadar, Splunk, Sentinel), Qualys, OpenVAS, Maltego, IPS/IDS, EDR, Firewall Rules</div>
-    </div>
-    <div style="height:.5rem"></div>
-    <div class="term"><span class="term-label">Purple Team</span><span class="term-def">Collaboration between Red and Blue teams to improve the effectiveness of both attack and defense assessments.</span></div>
-    <div class="tip">Exam tip: Red = offensive. Blue = defensive. Purple = collaborative improvement between both.</div>
+    <div class="card-title">Red / Blue / Purple Teams</div>
+    <div class="compare-row"><div class="compare-cell compare-head">Red Team (Offensive)</div><div class="compare-cell compare-head">Blue Team (Defensive)</div></div>
+    <div class="compare-row"><div class="compare-cell">Ethical Hacker / Pentester</div><div class="compare-cell">SOC Analyst (Level 1–3)</div></div>
+    <div class="compare-row"><div class="compare-cell">Exploit Developer</div><div class="compare-cell">Incident Response (IR Analyst)</div></div>
+    <div class="compare-row"><div class="compare-cell">Bug Bounty Hunter</div><div class="compare-cell">Threat Hunter</div></div>
+    <div class="compare-row"><div class="compare-cell">Physical Security Pentester</div><div class="compare-cell">Digital Forensic Analyst</div></div>
+    <div class="compare-row"><div class="compare-cell"></div><div class="compare-cell">Threat Intelligence Analyst</div></div>
+    <div class="compare-row"><div class="compare-cell"></div><div class="compare-cell">Vulnerability Management Analyst</div></div>
+    <div class="compare-row"><div class="compare-cell"><strong>Tools:</strong> Nmap, Metasploit, Kali Linux</div><div class="compare-cell"><strong>Tools:</strong> SIEM (QRadar, Splunk, Sentinel), Qualys, OpenVAS, Maltego, IPS/IDS, EDR, Firewall Rules</div></div>
+    <div class="term" style="margin-top:.75rem"><span class="term-label">Purple Team</span><span class="term-def">Collaboration between Red and Blue teams to improve effectiveness of both attack and defense.</span></div>
   </div>
 </div>
 
+<!-- ===== MODULE 7 AUDIT ===== -->
 <div id="mod7-audit" class="section">
   <div class="card">
     <div class="card-title">Types of Security Audits</div>
-    <div class="term"><span class="term-label">Internal Audit</span><span class="term-def">Performed by internal staff for internal audiences. Reporting line is independent of the functions being evaluated.</span></div>
+    <div class="term"><span class="term-label">Internal Audit</span><span class="term-def">Performed by internal staff for internal audiences. Reporting line is independent of functions being evaluated.</span></div>
     <div class="term"><span class="term-label">External Audit</span><span class="term-def">Performed by an outside auditing firm.</span></div>
-    <div class="term"><span class="term-label">Third-Party Audit</span><span class="term-def">Conducted by another organization (e.g., regulatory body auditing a firm under their regulation).</span></div>
-    <h3>Audit location types</h3>
-    <div class="term"><span class="term-label">On-premise</span><span class="term-def">Audit performed at the physical site.</span></div>
-    <div class="term"><span class="term-label">Cloud</span><span class="term-def">Audit performed in cloud environments.</span></div>
-    <div class="term"><span class="term-label">Hybrid</span><span class="term-def">Mix of on-premise and cloud audit.</span></div>
-    <div class="tip">Auditing standard: COBIT (Control Objectives for Information and Related Technologies) is commonly used.</div>
+    <div class="term"><span class="term-label">Third-Party Audit</span><span class="term-def">Conducted by another organization (e.g., regulatory body auditing a regulated firm).</span></div>
+    <div class="term"><span class="term-label">Location</span><span class="term-def">On-premise, Cloud, or Hybrid.</span></div>
+    <div class="tip">COBIT (Control Objectives for Information and Related Technologies) is commonly used as an auditing standard.</div>
   </div>
-
   <div class="card">
     <div class="card-title">Analyzing Test Output — Report Components</div>
     <div class="list-item"><strong>Executive Summary</strong> — high-level overview for leadership</div>
     <div class="list-item"><strong>Scope and Objectives</strong> — what was tested and why</div>
-    <div class="list-item"><strong>Methodology</strong> — how the testing was conducted</div>
+    <div class="list-item"><strong>Methodology</strong> — how testing was conducted</div>
     <div class="list-item"><strong>Findings</strong> — discovered vulnerabilities and issues</div>
     <div class="list-item"><strong>Risk Analysis</strong> — impact and likelihood assessment</div>
     <div class="list-item"><strong>Recommendations</strong> — how to fix the issues</div>
     <div class="list-item"><strong>Timelines and Resources</strong> — remediation schedule</div>
-    <div class="tip">The main goal of test data analysis = a REMEDIATION ROADMAP provided to stakeholders.</div>
+    <div class="tip">Main goal of test data analysis = a REMEDIATION ROADMAP provided to stakeholders.</div>
   </div>
-
   <div class="card">
     <div class="card-title">Exception Handling & Ethical Disclosure</div>
-    <div class="term"><span class="term-label">Exception</span><span class="term-def">When a policy, procedure, or control is temporarily bypassed. Must be documented and justified. Exceptions always increase risk.</span></div>
-    <div class="term"><span class="term-label">Ethical Disclosure</span><span class="term-def">Some security incidents must be ethically disclosed. Many orgs lack a disclosure policy. DHS created a Vulnerability Disclosure Policy template.</span></div>
-    <div class="tip">Exam tip: Exceptions = temporary bypass = increased risk. Documentation is always key.</div>
+    <div class="term"><span class="term-label">Exception</span><span class="term-def">Policy, procedure, or control temporarily bypassed. Must be documented. Exceptions always increase risk.</span></div>
+    <div class="term"><span class="term-label">Ethical Disclosure</span><span class="term-def">Some security incidents must be ethically disclosed. DHS created a Vulnerability Disclosure Policy template.</span></div>
   </div>
 </div>
 
-<div id="quiz" class="section">
+<!-- ===== QUIZ MODULE 6 — 100 ITEMS ===== -->
+<div id="quiz6" class="section">
   <div class="card">
-    <div class="card-title">Module 6 and 7 Quiz — 50 Items</div>
+    <div class="card-title">Module 6 Quiz — 100 Items</div>
     <div class="quiz-meta">
-      <div class="quiz-stats" id="quizStats">50 multiple-choice items. Answer first, then check your score.</div>
+      <div class="quiz-stats" id="q6Stats">100 items based on Module 6 slides.</div>
       <div class="quiz-actions">
-        <button class="quiz-btn primary" type="button" id="checkQuizBtn">Check Answers & Reveal Score</button>
-        <button class="quiz-btn" type="button" id="shuffleQuizBtn">Shuffle Quiz</button>
+        <button class="quiz-btn primary" type="button" id="checkQ6Btn">Check Answers</button>
+        <button class="quiz-btn" type="button" id="shuffleQ6Btn">Shuffle</button>
       </div>
     </div>
-    <div class="quiz-score" id="quizScore"></div>
-    <div class="quiz-list" id="quizList"></div>
+    <div class="quiz-score" id="q6Score"></div>
+    <div class="quiz-list" id="q6List"></div>
   </div>
 </div>
 
-<div id="scenarioQuiz" class="section">
+<!-- ===== QUIZ MODULE 7 — 100 ITEMS ===== -->
+<div id="quiz7" class="section">
   <div class="card">
-    <div class="card-title">Scenario Quiz — Apply the Concepts</div>
+    <div class="card-title">Module 7 Quiz — 100 Items</div>
     <div class="quiz-meta">
-      <div class="quiz-stats" id="scenarioStats">Read each situation and pick the best answer.</div>
+      <div class="quiz-stats" id="q7Stats">100 items based on Module 7 slides.</div>
       <div class="quiz-actions">
-        <button class="quiz-btn primary" type="button" id="checkScenarioBtn">Check Answers & Reveal Score</button>
-        <button class="quiz-btn" type="button" id="shuffleScenarioBtn">Shuffle Quiz</button>
+        <button class="quiz-btn primary" type="button" id="checkQ7Btn">Check Answers</button>
+        <button class="quiz-btn" type="button" id="shuffleQ7Btn">Shuffle</button>
       </div>
     </div>
-    <div class="quiz-score" id="scenarioScore"></div>
-    <div class="quiz-list" id="scenarioList"></div>
+    <div class="quiz-score" id="q7Score"></div>
+    <div class="quiz-list" id="q7List"></div>
   </div>
 </div>
 
-<div id="enumQuiz" class="section">
-  <div class="card">
-    <div class="card-title">Enumeration Quiz — List the Correct Items</div>
-    <div class="quiz-meta">
-      <div class="quiz-stats" id="enumStats">Type the answers in order. Separate items with commas.</div>
-      <div class="quiz-actions">
-        <button class="quiz-btn primary" type="button" id="checkEnumBtn">Check Answers & Reveal Score</button>
-        <button class="quiz-btn" type="button" id="shuffleEnumBtn">Shuffle Quiz</button>
-      </div>
-    </div>
-    <div class="quiz-score" id="enumScore"></div>
-    <div class="quiz-list" id="enumList"></div>
-  </div>
-</div>
-
+<!-- ===== ACRONYMS ===== -->
 <div id="acros" class="section">
   <div class="card">
     <div class="card-title">Module 6 Acronyms</div>
@@ -584,7 +443,7 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
     <div class="acro"><strong>OAuth</strong> — <span>Open Authorization (RFC 6749)</span></div>
     <div class="acro"><strong>RuBAC</strong> — <span>Rule-Based Access Control</span></div>
     <div class="acro"><strong>ABAC</strong> — <span>Attribute-Based Access Control</span></div>
-    <div class="acro"><strong>RBAC</strong> — <span>Risk-Based Access Control (in this module)</span></div>
+    <div class="acro"><strong>Risk-Based AC / RBAC</strong> — <span>Risk-Based Access Control</span></div>
     <div class="acro"><strong>PEP</strong> — <span>Policy Enforcement Point</span></div>
     <div class="acro"><strong>PDP</strong> — <span>Policy Decision Point</span></div>
     <div class="acro"><strong>PIP</strong> — <span>Policy Information Point</span></div>
@@ -608,7 +467,7 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
     <div class="acro"><strong>IDS</strong> — <span>Intrusion Detection System</span></div>
     <div class="acro"><strong>EDR</strong> — <span>Endpoint Detection and Response</span></div>
     <div class="acro"><strong>COBIT</strong> — <span>Control Objectives for Information and Related Technologies</span></div>
-    <div class="acro"><strong>NIST SP 800-53A</strong> — <span>Assessing Security and Privacy Controls in Federal Info Systems</span></div>
+    <div class="acro"><strong>NIST SP 800-53A</strong> — <span>Assessing Security and Privacy Controls in Federal Information Systems</span></div>
     <div class="acro"><strong>DHS</strong> — <span>Department of Homeland Security</span></div>
     <div class="acro"><strong>VA</strong> — <span>Vulnerability Assessment</span></div>
   </div>
@@ -616,395 +475,350 @@ h3{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:upp
 </div>
 
 <script>
+// ==================== HELPERS ====================
 function show(evt, id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   evt.currentTarget.classList.add('active');
 }
-
-const quizData = [
-  { q: 'What does IAM stand for?', choices: ['Identity and Access Management', 'Integrated Access Matrix', 'Internet Authentication Model', 'Identity Audit Module'], answer: 0 },
-  { q: 'Which core IAM component proves who you are?', choices: ['Authorization', 'Accounting', 'Authentication', 'Auditing'], answer: 2 },
-  { q: 'Which 4A tracks what you did?', choices: ['Identity', 'Authentication', 'Accounting/Auditing', 'Authorization'], answer: 2 },
-  { q: 'Rule-Based Access Control is abbreviated as:', choices: ['RBAC', 'RuBAC', 'ABAC', 'CBAC'], answer: 1 },
-  { q: 'Attribute-Based Access Control is abbreviated as:', choices: ['ABAC', 'RBAC', 'RuBAC', 'PBAC'], answer: 0 },
-  { q: 'Which access model makes decisions based on user, resource, and environment attributes?', choices: ['ABAC', 'RuBAC', 'MAC', 'DAC'], answer: 0 },
-  { q: 'What does PEP do?', choices: ['Defines policies', 'Provides attribute data', 'Interprets logs', 'Intercepts requests and enforces policies'], answer: 3 },
-  { q: 'What does PDP do?', choices: ['Evaluates policies and makes allow/deny decisions', 'Provides identity proof', 'Stores credentials', 'Creates sessions'], answer: 0 },
-  { q: 'What does PIP do?', choices: ['Administers policies', 'Provides attribute information to PDPs', 'Issues session IDs', 'Protects identity proofs'], answer: 1 },
-  { q: 'What does PAP do?', choices: ['Provides audit logs', 'Administers policies', 'Protects passwords', 'Provisions users'], answer: 1 },
-  { q: 'Provisioning means:', choices: ['Removing access', 'Adding a user and granting access', 'Changing a password only', 'Locking a device'], answer: 1 },
-  { q: 'Deprovisioning means:', choices: ['Granting access temporarily', 'Creating a service account', 'Removing a user and revoking access', 'Auditing logs'], answer: 2 },
-  { q: 'Privilege creep means:', choices: ['Users lose all privileges', 'Users accumulate excess access rights over time', 'Passwords are rotated too often', 'An account is auto-locked'], answer: 1 },
-  { q: 'Service accounts are also called:', choices: ['Guest accounts', 'Application accounts', 'Admin vaults', 'Identity tokens'], answer: 1 },
-  { q: 'Which statement best describes SSO?', choices: ['Temporary access only', 'Authenticate once and access multiple services', 'Authentication only inside one app', 'Encrypt all traffic'], answer: 1 },
-  { q: 'JIT access means:', choices: ['Permanent admin access', 'Temporary access granted only when needed', 'A ticketing system', 'A type of password manager'], answer: 1 },
-  { q: 'OAuth 2.0 is mainly for:', choices: ['Authentication only', 'Authorization only', 'Encryption only', 'Biometric scanning'], answer: 1 },
-  { q: 'OpenID is mainly for:', choices: ['Authentication only', 'Authorization only', 'Accounting only', 'Auditing only'], answer: 0 },
-  { q: 'OIDC is:', choices: ['A replacement for SAML', 'Authentication layer on top of OAuth 2.0', 'A firewall protocol', 'A vulnerability scoring tool'], answer: 1 },
-  { q: 'SAML is based on:', choices: ['XML', 'JSON', 'CSV', 'YAML'], answer: 0 },
-  { q: 'In Kerberos, the trusted third party is the:', choices: ['PDP', 'KDC', 'SP', 'PIP'], answer: 1 },
-  { q: 'TGT stands for:', choices: ['Ticket Grant Tool', 'Ticket-Granting Ticket', 'Trusted Gate Token', 'Temporary Grant Token'], answer: 1 },
-  { q: 'RADIUS uses:', choices: ['TCP port 49', 'UDP', 'HTTP only', 'SSH'], answer: 1 },
-  { q: 'TACACS+ uses:', choices: ['UDP', 'TCP port 49', 'ICMP', 'TLS port 443'], answer: 1 },
-  { q: 'TACACS+ compared with RADIUS is generally:', choices: ['Less secure because it encrypts nothing', 'More secure because it encrypts all authentication info by default', 'Only for local accounts', 'Not used in networks'], answer: 1 },
-  { q: 'Security testing mainly:', choices: ['Replaces audits', 'Verifies controls are functioning properly', 'Creates new policies', 'Deletes vulnerabilities automatically'], answer: 1 },
-  { q: 'Security assessment is:', choices: ['Only a password check', 'A comprehensive review beyond testing', 'A hardware inventory', 'A log archive'], answer: 1 },
-  { q: 'Security audit is usually done by:', choices: ['Independent auditors', 'Only system admins', 'End users', 'The attackers'], answer: 0 },
-  { q: 'Black box penetration testing means:', choices: ['Full source-code access', 'Partial knowledge', 'Zero knowledge of the system', 'Only physical access'], answer: 2 },
-  { q: 'White box penetration testing means:', choices: ['Zero knowledge', 'Partial knowledge', 'Full knowledge', 'No testing allowed'], answer: 2 },
-  { q: 'Gray box penetration testing means:', choices: ['Full knowledge', 'Zero knowledge', 'Partial knowledge', 'Only malware analysis'], answer: 2 },
-  { q: 'Red team is the:', choices: ['Defensive team', 'Offensive team', 'Audit team', 'Support team'], answer: 1 },
-  { q: 'Blue team is the:', choices: ['Offensive team', 'Defensive team', 'Penalty team', 'Redundant team'], answer: 1 },
-  { q: 'Purple team means:', choices: ['No teamwork', 'Collaboration between red and blue teams', 'Only blue team operations', 'Only physical security'], answer: 1 },
-  { q: 'SCAP stands for:', choices: ['Security Content Automation Protocol', 'Secure Cloud Access Program', 'System Control Audit Process', 'Security Center Access Policy'], answer: 0 },
-  { q: 'CVE stands for:', choices: ['Common Vulnerabilities and Exposures', 'Critical Verification Engine', 'Cyber Vulnerability Entry', 'Control Validation Event'], answer: 0 },
-  { q: 'CVSS stands for:', choices: ['Common Vulnerability Scoring System', 'Critical Vulnerability Security Standard', 'Cyber Validation Severity Scale', 'Control Verification Score Sheet'], answer: 0 },
-  { q: 'A vulnerability assessment primarily:', choices: ['Creates user accounts', 'Discovers system weaknesses', 'Replaces patching', 'Removes logs'], answer: 1 },
-  { q: 'Log reviews are important for assessing security infrastructure because they often use:', choices: ['SIEM and NTP', 'DNS and DHCP', 'FTP and Telnet', 'NAT and VPN'], answer: 0 },
-  { q: 'Synthetic transactions are used to:', choices: ['Store passwords', 'Simulate traffic to test system behavior', 'Patch vulnerabilities', 'Encrypt files'], answer: 1 },
-  { q: 'Coverage analysis ensures:', choices: ['All intended areas are tested', 'Only one control is tested', 'No logs are generated', 'Users are locked out'], answer: 0 },
-  { q: 'Breach and attack simulations are used to:', choices: ['Test defenses with simulated attacks', 'Create backups', 'Issue certificates', 'Authenticate users'], answer: 0 },
-  { q: 'Internal audit is performed by:', choices: ['Internal staff', 'Only outside firms', 'The public', 'The red team'], answer: 0 },
-  { q: 'Third-party audit is conducted by:', choices: ['The system owner only', 'Another organization', 'The same users being audited', 'No one'], answer: 1 },
-  { q: 'COBIT is commonly used as a(n):', choices: ['Encryption algorithm', 'Auditing standard', 'Password policy', 'Network protocol'], answer: 1 },
-  { q: 'The main goal of test data analysis is to produce a:', choices: ['Firewall rule set', 'Remediation roadmap', 'User directory', 'Password vault'], answer: 1 },
-  { q: 'An exception in security means:', choices: ['A permanent rule', 'A temporary bypass that increases risk', 'A new audit control', 'A backup strategy'], answer: 1 },
-  { q: 'Ethical disclosure refers to:', choices: ['Hiding vulnerabilities forever', 'Responsibly disclosing incidents or vulnerabilities', 'Deleting logs immediately', 'Disabling all access'], answer: 1 },
-  { q: 'A Security Audit Report usually includes:', choices: ['Executive summary, findings, recommendations', 'Only usernames and passwords', 'Only network cables', 'Only screenshots'], answer: 0 },
-  { q: 'Which is a key indicator in security process data?', choices: ['Number of Open Vulnerabilities', 'Number of Chairs', 'Number of Printers', 'Number of Employees Only'], answer: 0 },
-  { q: 'Which item is a common risk or performance indicator?', choices: ['Time to Resolve', 'Keyboard Layout', 'Monitor Size', 'Desk Color'], answer: 0 }
-];
-
-const scenarioData = [
-  { q: 'An employee is told to return their laptop before the resignation is public. What risk is this most similar to?', choices: ['Privilege creep', 'Being tipped off during deprovisioning', 'Password spraying', 'Synthetic transaction testing'], answer: 1 },
-  { q: 'A company wants access rules to change based on the user location and device risk. Which model fits best?', choices: ['RuBAC', 'ABAC', 'DAC', 'MAC'], answer: 1 },
-  { q: 'A tester gets the source code, architecture, and credentials before testing. What type of pentest is this?', choices: ['Black box', 'Gray box', 'White box', 'Red team'], answer: 2 },
-  { q: 'A website lets users sign in once and then access several connected apps. What is the best description?', choices: ['SSO', 'JIT', 'SCAP', 'TGT'], answer: 0 },
-  { q: 'An organization only grants admin access for the exact moment it is needed. What access style is this?', choices: ['Privilege creep', 'JIT access', 'Service account access', 'Static authorization'], answer: 1 },
-  { q: 'A security team is reviewing controls to see whether they work properly on a schedule. What activity is this?', choices: ['Security testing', 'Security audit', 'Credential sharing', 'Deprovisioning'], answer: 0 },
-  { q: 'An outside firm is hired to review the company’s controls independently. What is this called?', choices: ['Internal audit', 'External audit', 'Provisioning', 'Policy enforcement'], answer: 1 },
-  { q: 'A company uses a trusted third party to issue tickets inside the network. Which system is this?', choices: ['Kerberos', 'SAML', 'OAuth 2.0', 'RADIUS'], answer: 0 },
-  { q: 'A blue-team analyst is checking logs and time stamps across systems for correlation. Which service matters most?', choices: ['NTP', 'PAP', 'PIP', 'SP'], answer: 0 },
-  { q: 'A vulnerability scan finds many outdated packages, and the report must become a fix plan. What is the main output?', choices: ['Remediation roadmap', 'Red team playbook', 'User provisioning list', 'Session token map'], answer: 0 },
-  { q: 'A company wants policies to change based on predefined if-then conditions. Which model fits best?', choices: ['RuBAC', 'ABAC', 'DAC', 'MAC'], answer: 0 },
-  { q: 'A student logs into one portal and can open email, LMS, and library systems without signing in again. What is this?', choices: ['SSO', 'JIT', 'MFA', 'SCAP'], answer: 0 },
-  { q: 'A user account is removed, certificates are revoked, and equipment is returned after resignation. What process is this?', choices: ['Provisioning', 'Deprovisioning', 'Auditing', 'Federation'], answer: 1 },
-  { q: 'A system uses a service account for API-to-API communication. What is the biggest concern if the account is exposed?', choices: ['Privilege escalation', 'Screen brightness', 'Data compression', 'Keyboard mapping'], answer: 0 },
-  { q: 'A security analyst wants to test the system from an attacker’s point of view with no prior knowledge. What approach is best?', choices: ['White box', 'Gray box', 'Black box', 'Purple box'], answer: 2 },
-  { q: 'A team is using simulated attacks to evaluate defenses before real attackers do. What are they doing?', choices: ['Breach and attack simulations', 'Account provisioning', 'Password rotation', 'Data classification'], answer: 0 },
-  { q: 'A manager wants to verify that account permissions are still appropriate after role changes. What should be done?', choices: ['Account access review', 'System formatting', 'Patch removal', 'Token sharing'], answer: 0 },
-  { q: 'A report must summarize findings, risk, and recommendations for leadership. What is the most likely output?', choices: ['Security audit report', 'Source code backup', 'Service ticket', 'Access token'], answer: 0 },
-  { q: 'A login system uses a trusted third party and ticketing for network resources. Which term best matches the environment?', choices: ['Kerberos realm', 'OpenID provider', 'OAuth scope', 'SOC dashboard'], answer: 0 },
-  { q: 'A team compares RADIUS and TACACS+ and chooses the one with separate AAA and full encryption. Which is it?', choices: ['RADIUS', 'TACACS+', 'SAML', 'OIDC'], answer: 1 }
-];
-
-const enumerationData = [
-  { q: 'Enumerate the 4As of IAM', answers: ['identity', 'authentication', 'authorization', 'accounting/auditing'] },
-  { q: 'Enumerate the 4 main P-function components in access control', answers: ['pep', 'pdp', 'pip', 'pap'] },
-  { q: 'Enumerate the 3 common penetration testing types', answers: ['black box', 'white box', 'gray box'] },
-  { q: 'Enumerate the 3 team colors used in offensive/defensive collaboration', answers: ['red team', 'blue team', 'purple team'] },
-  { q: 'Enumerate the 3 common security assessment categories discussed in the module', answers: ['security testing', 'security assessment', 'security audit'] },
-  { q: 'Enumerate the 3 main federated identity terms', answers: ['identity provider', 'service provider', 'security token'] },
-  { q: 'Enumerate the 3 main FIM deployment options', answers: ['on-premise', 'cloud', 'hybrid'] },
-  { q: 'Enumerate the 4 common vulnerability scan types', answers: ['network discovery scans', 'network vulnerability scans', 'web app vulnerability scans', 'database vulnerability scans'] },
-  { q: 'Enumerate the 4 main Security Audit Report components', answers: ['executive summary', 'scope and objectives', 'methodology', 'findings'] },
-  { q: 'Enumerate the 6 KPIs/KRIs listed in the reviewer', answers: ['number of open vulnerabilities', 'time to resolve', 'rate of occurrence', 'number of compromises', 'number of software flaws', 'audit findings'] },
-  { q: 'Enumerate the 3 audit types', answers: ['internal audit', 'external audit', 'third-party audit'] },
-  { q: 'Enumerate the 3 penetration testing knowledge levels', answers: ['black box', 'white box', 'gray box'] },
-  { q: 'Enumerate the 3 core OAuth/OpenID-related terms', answers: ['oauth 2.0', 'openid', 'oidc'] },
-  { q: 'Enumerate the 4 AAA-related support terms in the reviewer', answers: ['kdc', 'tgt', 'radius', 'tacacs+'] }
-];
-
-let quizState = [];
-let quizTimeout = null;
-let scenarioState = [];
-let enumState = [];
-
-function shuffle(array){
-  const copy = [...array];
-  for(let i = copy.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
 }
 
-function buildQuizState(){
-  quizState = shuffle(quizData).map((item, index) => {
-    const options = item.choices.map((choice, idx) => ({ choice, isCorrect: idx === item.answer }));
-    const shuffledOptions = shuffle(options);
-    const answerIndex = shuffledOptions.findIndex(option => option.isCorrect);
-    return {
-      id: index + 1,
-      q: item.q,
-      choices: shuffledOptions,
-      answer: answerIndex,
-      selected: null,
-      revealed: false
-    };
+// ==================== MODULE 6 — 100 ITEMS ====================
+const raw6 = [
+  // IAM Basics
+  {q:"What does IAM stand for?",c:["Identity and Access Management","Integrated Access Matrix","Internet Authentication Model","Identity Audit Module"],a:0},
+  {q:"IAM ensures the right person gets the right access to the right resource at the right ___.",c:["Place","Time","Cost","Level"],a:1},
+  {q:"Which core IAM component answers 'Who are you?'",c:["Authorization","Accounting","Authentication","Auditing"],a:2},
+  {q:"Which core IAM component answers 'What are you allowed to do?'",c:["Identity","Authentication","Accounting","Authorization"],a:3},
+  {q:"Which core IAM component tracks what you did?",c:["Identity","Authentication","Accounting/Auditing","Authorization"],a:2},
+  {q:"In IAM, 'Identity' refers to:",c:["What you are allowed to do","Who you are — user, system, or service","What you did","How you prove yourself"],a:1},
+  {q:"AAA in IAM stands for:",c:["Access, Administration, Audit","Authentication, Authorization, Accounting","Application, Attribute, Access","Authenticate, Authorize, Archive"],a:1},
+  // Assets
+  {q:"Which asset category includes BYOD devices?",c:["Facilities","Applications","Devices","Services"],a:2},
+  {q:"Physical locations owned or rented by the organization are classified as:",c:["Systems","Devices","Facilities","Services"],a:2},
+  {q:"Software components providing specific functions to the organization are called:",c:["Applications","Services","Devices","Systems"],a:1},
+  {q:"All hardware of IT is classified under which asset?",c:["Devices","Services","Systems","Facilities"],a:2},
+  {q:"Computer programs performing specific functions are classified as:",c:["Services","Applications","Systems","Devices"],a:1},
+  // Access Controls
+  {q:"Which access control stops incidents before they happen?",c:["Detective","Corrective","Preventative","Deterrent"],a:2},
+  {q:"Which access control detects incidents when they occur?",c:["Preventative","Corrective","Deterrent","Detective"],a:3},
+  {q:"Which access control corrects after an incident?",c:["Directive","Recovery","Corrective","Compensating"],a:2},
+  {q:"Which access control discourages bad behavior?",c:["Directive","Deterrent","Compensating","Corrective"],a:1},
+  {q:"Which access control restores after an incident?",c:["Corrective","Detective","Recovery","Preventative"],a:2},
+  {q:"Which access control directs subjects toward compliance?",c:["Directive","Administrative","Compensating","Deterrent"],a:0},
+  {q:"Which access control compensates for a weakness?",c:["Directive","Deterrent","Corrective","Compensating"],a:3},
+  {q:"Policies, procedures, and training are examples of which access control?",c:["Physical","Technical/Logical","Administrative","Compensating"],a:2},
+  {q:"Software and hardware controls fall under which access control type?",c:["Physical","Administrative","Directive","Technical/Logical"],a:3},
+  {q:"Physical barriers and locks are examples of which access control?",c:["Technical/Logical","Physical","Administrative","Corrective"],a:1},
+  {q:"How many access control types are discussed in Module 6?",c:["6","8","10","12"],a:2},
+  // Access Models
+  {q:"Rule-Based Access Control is abbreviated as:",c:["RBAC","RuBAC","ABAC","CBAC"],a:1},
+  {q:"Attribute-Based Access Control is abbreviated as:",c:["ABAC","RBAC","RuBAC","PBAC"],a:0},
+  {q:"Which access model makes decisions based on user, resource, and environment attributes?",c:["ABAC","RuBAC","MAC","DAC"],a:0},
+  {q:"Which access model dynamically adjusts permissions based on risk level?",c:["ABAC","RuBAC","Risk-Based Access Control","MAC"],a:2},
+  {q:"RuBAC supports which two control types?",c:["Static and Fixed","Dynamic and Fine-Grained","Manual and Automated","Role and Rule"],a:1},
+  {q:"In ABAC, access control decisions consider attributes of:",c:["Users only","Resources only","Users, resources, and environment","Roles only"],a:2},
+  // PEP PDP PIP PAP
+  {q:"Which policy component intercepts access requests and enforces policies?",c:["PDP","PIP","PAP","PEP"],a:3},
+  {q:"Which policy component evaluates policies and makes allow/deny decisions?",c:["PEP","PIP","PAP","PDP"],a:3},
+  {q:"Which policy component provides attribute information to the PDP?",c:["PAP","PEP","PIP","PDP"],a:2},
+  {q:"Which policy component is used by admins to define and manage access policies?",c:["PEP","PDP","PIP","PAP"],a:3},
+  {q:"PEP stands for:",c:["Policy Enforcement Point","Policy Evaluation Point","Protocol Enforcement Point","Policy Entry Point"],a:0},
+  {q:"PDP stands for:",c:["Policy Distribution Point","Policy Decision Point","Protocol Data Point","Policy Deployment Point"],a:1},
+  {q:"PIP stands for:",c:["Policy Information Point","Policy Input Point","Protocol Information Point","Policy Issuance Point"],a:0},
+  {q:"PAP stands for:",c:["Policy Access Point","Policy Administration Point","Protocol Administration Point","Policy Audit Point"],a:1},
+  // Provisioning / Deprovisioning
+  {q:"Provisioning is also known as:",c:["Offboarding","Onboarding","Auditing","Terminating"],a:1},
+  {q:"Deprovisioning is also known as:",c:["Onboarding","Provisioning","Offboarding","Credentialing"],a:2},
+  {q:"Which of the following is NOT a deprovisioning task?",c:["Disabling the user account","Revoking certificates","Issuing new access codes","Return of equipment"],a:2},
+  {q:"When users accumulate access rights over time beyond what they need, this is called:",c:["Session hijacking","Privilege creep","Spoofing","Escalation drift"],a:1},
+  {q:"Account access reviews help guard against:",c:["Session timeouts","Privilege creep","Synthetic transactions","SAML token expiry"],a:1},
+  {q:"Account access reviews verify that:",c:["Accounts have maximum privileges","Accounts do not have excessive privileges","All sessions are server-side","All tokens use JWT"],a:1},
+  {q:"Which of the following is an example of 'tipping off' an employee during deprovisioning?",c:["Issuing a new badge","IT requesting equipment back prematurely","Starting a new provisioning form","Granting a TGT"],a:1},
+  {q:"Distributing a reorganization chart before offboarding is an example of:",c:["Proper deprovisioning","Tipping off an employee","Account access review","Service account management"],a:1},
+  // Service Accounts
+  {q:"A service account is also called a(n):",c:["Guest account","Admin account","Application account","Shared account"],a:2},
+  {q:"Service accounts are often used for:",c:["Human login sessions","Machine-to-machine API communication","Physical access control","Browser-based SSO"],a:1},
+  {q:"Service accounts are often considered:",c:["Guest identities","Standard identities","Privileged identities","Anonymous identities"],a:2},
+  {q:"Which attack on a service account involves elevating privileges by impersonating the account?",c:["Spoofing","Information Disclosure","Non-repudiation","Privilege Escalation"],a:3},
+  {q:"Using a service account to hide actions performed on the system is called:",c:["Spoofing","Non-repudiation","Privilege Escalation","Information Disclosure"],a:1},
+  {q:"Extracting infrastructure information via a service account is called:",c:["Spoofing","Non-repudiation","Information Disclosure","Privilege Escalation"],a:2},
+  // Session Management
+  {q:"Session management primarily protects:",c:["Network bandwidth","User identity and data during interaction","Server configuration","DNS records"],a:1},
+  {q:"Session IDs are used for:",c:["Encrypting passwords","Identifying the session","Issuing TGTs","Administering policies"],a:1},
+  {q:"Which session component ensures inactive sessions are terminated?",c:["Session creation","Session tracking","Session timeout","Session termination"],a:2},
+  {q:"When a user manually logs out, this is called:",c:["Session timeout","Session termination","Session creation","Session security"],a:1},
+  {q:"Session security measures protect against:",c:["Privilege creep","Synthetic transactions","Session hijacking and fixation","SAML token expiry"],a:2},
+  {q:"Which type of session management stores data on the client?",c:["Server-side","Hybrid","Client-side","Federated"],a:2},
+  // FIM
+  {q:"FIM stands for:",c:["Federated Identity Management","Framework for Identity Mapping","Federated Information Module","Federation and IAM"],a:0},
+  {q:"The IdP in FIM is responsible for:",c:["Hosting services","Authenticating users and issuing tokens","Providing attribute data","Defining access policies"],a:1},
+  {q:"The SP in FIM is responsible for:",c:["Issuing tokens","Authenticating users","Hosting services and relying on IdP tokens","Providing attribute data"],a:2},
+  {q:"After successful authentication, the IdP issues a:",c:["Ticket-Granting Ticket","Security Token","PEP Request","CVSS Score"],a:1},
+  {q:"Token formats used by FIM include:",c:["CSV and XML","SAML and JWT","HTML and JSON","UDP and TCP"],a:1},
+  {q:"Common federation protocols include:",c:["RADIUS and TACACS+","OpenID Connect and OAuth","SCAP and CVE","Kerberos and SAML only"],a:1},
+  {q:"Which FIM deployment has all software on-site?",c:["Cloud","Hybrid","On-premise","Distributed"],a:2},
+  {q:"Which FIM deployment is a mix of on-site and cloud?",c:["On-premise","Cloud","Distributed","Hybrid"],a:3},
+  {q:"Which FIM benefit allows users to authenticate once and access multiple services?",c:["Interoperability","Reduced Admin Overhead","SSO","Improved Security"],a:2},
+  {q:"Which FIM benefit enables seamless integration across different domains?",c:["SSO","Interoperability","Reduced Admin Overhead","Improved Security"],a:1},
+  {q:"Which FIM benefit streamlines user provisioning and deprovisioning?",c:["Interoperability","SSO","Improved Security","Reduced Administrative Overhead"],a:3},
+  // SSO / JIT
+  {q:"SSO stands for:",c:["Secure Sign-Out","Single Sign-On","Session Security Object","Service Sign-On"],a:1},
+  {q:"SSO reduces:",c:["Admin overhead only","Password fatigue","Network latency","CVSS scores"],a:1},
+  {q:"A known risk of SSO is:",c:["Increased provisioning time","Single point of failure","Slower authentication","Higher token count"],a:1},
+  {q:"JIT stands for:",c:["Just-In-Time","Just-In-Token","Joint Identity Transfer","Joint Interface Testing"],a:0},
+  {q:"JIT access is best described as:",c:["Permanent admin access","Temporary access granted only when needed","A ticketing protocol","A password manager feature"],a:1},
+  {q:"JIT follows which security principle?",c:["Defense in Depth","Least Privilege","Need to Know only","Separation of Duties"],a:1},
+  {q:"JIT reduces the risk of:",c:["Network discovery scans","Insider threats and unauthorized access","SAML token expiry","Coverage gaps"],a:1},
+  // OAuth / OpenID / OIDC
+  {q:"OAuth 2.0 is primarily for:",c:["Authentication","Authorization","Accounting","Auditing"],a:1},
+  {q:"OpenID is primarily for:",c:["Authorization","Auditing","Authentication","Accounting"],a:2},
+  {q:"OIDC is:",c:["A replacement for SAML","An authentication layer on top of OAuth 2.0","A firewall protocol","A vulnerability scoring tool"],a:1},
+  {q:"OAuth 2.0 is described in:",c:["RFC 5246","RFC 6749","RFC 2616","RFC 4918"],a:1},
+  {q:"OAuth 2.0 is maintained by:",c:["OpenID Foundation","NIST","IETF","IEEE"],a:2},
+  {q:"OAuth 2.0 is NOT backward compatible with:",c:["OAuth 3.0","OAuth 1.0","SAML 1.0","OIDC"],a:1},
+  {q:"OIDC uses which token format?",c:["SAML","CSV","JWT","XML"],a:2},
+  {q:"An example of OIDC in action is:",c:["Using Kerberos on a local network","Logging into eBay with a Google account","RADIUS VPN authentication","TACACS+ device login"],a:1},
+  // SAML
+  {q:"SAML stands for:",c:["Security Assertion Markup Language","Secure Access Management Layer","Service Authentication Module Layer","Security Authorization Management Language"],a:0},
+  {q:"SAML is based on:",c:["JSON","XML","CSV","YAML"],a:1},
+  {q:"SAML is commonly used for:",c:["Network scanning","Browser-based SSO","Service account API calls","Log correlation"],a:1},
+  {q:"In SAML 2.0, the user trying to access an account is the:",c:["Service Provider","Identity Provider","Principal/User Agent","Federation Protocol"],a:2},
+  {q:"In SAML 2.0, the website the user is accessing is the:",c:["Identity Provider","Service Provider","Principal","Security Token"],a:1},
+  {q:"In SAML 2.0, the third party holding authentication info is the:",c:["Service Provider","Principal","Identity Provider","PAP"],a:2},
+  // Kerberos
+  {q:"Kerberos is primarily used:",c:["For cloud-based SSO","Within networks for ticket-based auth","For browser-based SSO only","For vulnerability scanning"],a:1},
+  {q:"The trusted third party in Kerberos is the:",c:["PDP","KDC","SP","PAP"],a:1},
+  {q:"KDC stands for:",c:["Key Decryption Center","Key Distribution Center","Kerberos Data Controller","Key Delegation Component"],a:1},
+  {q:"A Kerberos Ticket is:",c:["A plaintext identity claim","An encrypted message proving access permission","A JWT token","A SAML assertion"],a:1},
+  {q:"TGT stands for:",c:["Ticket Grant Tool","Trusted Gateway Token","Ticket-Granting Ticket","Temporary Grant Token"],a:2},
+  {q:"A TGT proves that a subject has:",c:["Completed deprovisioning","Authenticated through a KDC","Passed a vulnerability scan","Received a CVSS score"],a:1},
+  {q:"A Kerberos Realm is:",c:["A physical server room","A type of token","A logical area controlled by Kerberos","A type of access control"],a:2},
+  // RADIUS / TACACS+
+  {q:"RADIUS stands for:",c:["Remote Authorization Dial-in User Service","Remote Authentication Dial-in User Service","Remote Access Data in User Sessions","Routing and Authentication Dial-in User Service"],a:1},
+  {q:"RADIUS uses which transport protocol?",c:["TCP","UDP","ICMP","TLS"],a:1},
+  {q:"RADIUS encrypts:",c:["All authentication info","Only the password exchange","Nothing","Only session tokens"],a:1},
+  {q:"TACACS+ was developed by:",c:["Microsoft","NIST","Cisco Systems","OpenID Foundation"],a:2},
+  {q:"TACACS+ stands for:",c:["Terminal Access Controller Access Control System Plus","Total Authentication and Control Access System Plus","Terminal Authorization Controller Access Control Plus","Trusted Access Controller Authentication Control System Plus"],a:0},
+  {q:"TACACS+ uses which port?",c:["UDP 49","TCP 49","TCP 443","UDP 53"],a:1},
+  {q:"TACACS+ encrypts:",c:["Only the password","Nothing","All authentication information by default","Only session IDs"],a:2},
+  {q:"How does TACACS+ handle AAA compared to RADIUS?",c:["Combines AAA in one process like RADIUS","Separates AAA into distinct processes","Does not support accounting","Uses UDP instead of TCP"],a:1},
+  {q:"Which protocol can have AAA running on separate servers?",c:["RADIUS","Kerberos","TACACS+","SAML"],a:2},
+  // Credential Management
+  {q:"Credential management systems are also called:",c:["Token vaults","Password vaults","Session managers","Policy enforcers"],a:1},
+  {q:"Which credential management feature flags weak or reused passwords?",c:["Access Control","Secure Sharing","Password Health Monitoring","MFA Integration"],a:2},
+  {q:"Which credential management feature allows sharing credentials without exposing plaintext?",c:["Auto-fill","Password Generation","Secure Sharing","Cross-Platform Support"],a:2},
+];
+
+// ==================== MODULE 7 — 100 ITEMS ====================
+const raw7 = [
+  // Security Testing
+  {q:"Security testing verifies that security controls are:",c:["Documented only","Functioning properly","Compliant only","Updated monthly"],a:1},
+  {q:"Security testing should take place on:",c:["A random schedule","A regular schedule","Only after incidents","Annually only"],a:1},
+  {q:"Which factor should be considered when scheduling security tests?",c:["Availability of testing resources","Marketing budget","Number of employees","Office layout"],a:0},
+  {q:"'Criticality of the systems being protected' is a factor considered when:",c:["Deploying patches","Scheduling security tests","Hiring red team members","Issuing TGTs"],a:1},
+  {q:"'Sensitivity of data on systems' is relevant when:",c:["Designing dashboards","Scheduling security tests","Issuing SSL certificates","Conducting HR reviews"],a:1},
+  {q:"Which scheduling factor relates to how often a control's settings change?",c:["Likelihood of technical failure","Rate of change of control configuration","Impact on business operations","Sensitivity of data"],a:1},
+  {q:"'Impact of test on normal business operations' is a consideration when:",c:["Issuing security tokens","Scheduling security tests","Writing code reviews","Performing deprovisioning"],a:1},
+  {q:"'Difficulty and time required to perform the test' is one of how many scheduling factors?",c:["5","8","10","12"],a:2},
+  // Security Assessment
+  {q:"Security assessment goes beyond security testing by also including:",c:["Password resets","Reviews of risk and the threat environment","Hardware inventory","Firewall rule updates"],a:1},
+  {q:"After a security assessment, what is often required?",c:["A new firewall","An assessment report","A software patch","A badge reset"],a:1},
+  {q:"NIST provides best practices for security assessments in:",c:["NIST SP 800-37","NIST SP 800-53","NIST SP 800-53A","NIST SP 800-61"],a:2},
+  {q:"The full title of NIST SP 800-53A refers to building effective:",c:["Vulnerability roadmaps","Assessment Plans","Audit Reports","Penetration Tests"],a:1},
+  {q:"Under NIST, 'Specifications' in an assessment refers to:",c:["Controls in the system","Actions by people","Documents associated with the system","People who implement activities"],a:0},
+  {q:"Under NIST, 'Mechanisms' in an assessment refers to:",c:["Documents","Controls used within the information system","Actions by people","People implementing activities"],a:1},
+  {q:"Under NIST, 'Activities' in an assessment refers to:",c:["Documents","Controls","Actions carried out by people","People implementing mechanisms"],a:2},
+  {q:"Under NIST, 'Individuals' in an assessment refers to:",c:["Controls","Documents","Actions by people","People who implement specifications, mechanisms, and activities"],a:3},
+  // Security Audit
+  {q:"A security audit is similar to an assessment but performed by:",c:["End users","System admins only","Independent auditors","The red team"],a:2},
+  {q:"Internal audits are performed by:",c:["Outside firms","Regulatory bodies","Internal staff","The purple team"],a:2},
+  {q:"In internal audits, the reporting line is typically:",c:["Directly to IT","Independent of functions being evaluated","Part of the same department","Managed by the red team"],a:1},
+  {q:"External audits are performed by:",c:["Internal staff","A regulatory body","An outside auditing firm","The organization's SOC"],a:2},
+  {q:"Third-party audits are conducted by:",c:["Internal staff","Outside auditing firms","Another organization (e.g., regulatory body)","The blue team"],a:2},
+  {q:"COBIT stands for:",c:["Control Objectives for Information and Related Technologies","Comprehensive Objectives for IT Baseline","Control Output for Information Technology","Centralized Objectives for IT Benchmarking"],a:0},
+  {q:"COBIT is commonly used as a(n):",c:["Encryption algorithm","Auditing standard","Vulnerability scanner","Password policy"],a:1},
+  {q:"Audit location options include:",c:["Only on-premise","Only cloud","On-premise, Cloud, or Hybrid","Only hybrid"],a:2},
+  // Vulnerability Assessment
+  {q:"Vulnerability assessments primarily:",c:["Issue security tokens","Discover system weaknesses","Manage user accounts","Perform log reviews"],a:1},
+  {q:"Vulnerability assessment tests are commonly:",c:["Manual only","Automated","Performed annually only","Done by the blue team exclusively"],a:1},
+  {q:"Vulnerability assessments help build a:",c:["Pentest plan","Remediation roadmap","Risk score only","Firewall ruleset"],a:1},
+  {q:"SCAP was created by:",c:["Cisco","IETF","NIST","OpenID Foundation"],a:2},
+  {q:"SCAP stands for:",c:["Security Content Automation Protocol","Secure Control Access Policy","Security Check and Assessment Procedure","Systematic Control Automation Protocol"],a:0},
+  {q:"CVE stands for:",c:["Critical Vulnerability Entry","Common Vulnerabilities and Exposures","Cyber Verification Engine","Control Validation Event"],a:1},
+  {q:"CVSS stands for:",c:["Common Vulnerability Scoring System","Critical Vulnerability Security Standard","Cyber Validation Severity Scale","Control Verification Score Sheet"],a:0},
+  {q:"CVE provides:",c:["Severity scores for vulnerabilities","Standard identifiers for known vulnerabilities","Automated patching","Audit logs"],a:1},
+  {q:"CVSS provides:",c:["Standard identifiers","Severity scores for vulnerabilities","Log correlation","Remediation roadmaps"],a:1},
+  {q:"Which type of vulnerability scan discovers devices on the network?",c:["Database vulnerability scan","Web app vulnerability scan","Network discovery scan","Compliance check"],a:2},
+  {q:"Which type of vulnerability scan focuses on web application weaknesses?",c:["Network discovery scan","Database vulnerability scan","Network vulnerability scan","Web app vulnerability scan"],a:3},
+  {q:"Which type of vulnerability scan focuses on database weaknesses?",c:["Network vulnerability scan","Database vulnerability scan","Web app vulnerability scan","Network discovery scan"],a:1},
+  // Other Common Tests
+  {q:"Log reviews are important for assessing:",c:["Network bandwidth","Security infrastructure","Physical access","Password strength"],a:1},
+  {q:"Which tool is commonly used for log reviews in security testing?",c:["Nmap","Metasploit","SIEM","Maltego"],a:2},
+  {q:"NTP is used in log reviews to:",c:["Encrypt log files","Sync time across devices for log correlation","Generate vulnerability IDs","Authenticate users"],a:1},
+  {q:"NTP stands for:",c:["Network Testing Protocol","Network Time Protocol","Node Transfer Protocol","Network Token Protocol"],a:1},
+  {q:"Synthetic transactions refer to:",c:["Simulating traffic often through scripts","Real user transactions","Compliance audits","Physical security tests"],a:0},
+  {q:"Code review and testing refers to testing:",c:["Network hardware","Software as part of the development process","Physical security","Log files only"],a:1},
+  {q:"Misuse case testing involves testing:",c:["How a system behaves when used correctly","How a system behaves when misused","Compliance with standards","Coverage of all test areas"],a:1},
+  {q:"Coverage analysis ensures:",c:["Only one control is tested","All intended areas are tested","No logs are generated","Users are locked out"],a:1},
+  {q:"Breach and attack simulations test:",c:["User account creation","Defenses with simulated attacks","Log retention policies","Physical security only"],a:1},
+  {q:"Compliance checks verify:",c:["Adherence to standards","Vulnerability counts","Session timeouts","Token formats"],a:0},
+  {q:"Interface testing focuses on:",c:["Physical barriers","APIs, UIs, and integration points","Log files","Session IDs"],a:1},
+  // Collecting Security Process Data
+  {q:"Collecting account management data helps ensure users have:",c:["Maximum privileges","Correct authorization levels","Admin access","No access restrictions"],a:1},
+  {q:"Account management data collection guards against:",c:["Session hijacking","Privilege creep","SAML token expiry","Coverage gaps"],a:1},
+  {q:"'Number of Open Vulnerabilities' is a type of:",c:["Audit location","KPI/KRI","NIST component","FIM benefit"],a:1},
+  {q:"'Time to Resolve' is a:",c:["Deprovisioning task","FIM deployment option","KPI/KRI","Pentest type"],a:2},
+  {q:"'Rate of Occurrence' is a:",c:["SAML entity","Penetration testing type","KPI/KRI","NIST assessment component"],a:2},
+  {q:"'Number of Compromises' is a:",c:["Audit type","KPI/KRI","Vulnerability scan type","Access control type"],a:1},
+  {q:"'Number of Software Flaws' is a:",c:["FIM component","KPI/KRI","Deprovisioning step","Pentest phase"],a:1},
+  {q:"'Audit Findings' is a type of:",c:["FIM deployment","KPI/KRI","Penetration testing approach","NIST component"],a:1},
+  {q:"How many KPI/KRI indicators are listed in Module 7?",c:["4","5","6","8"],a:2},
+  // Analyzing Test Output
+  {q:"The main goal of test data analysis is to produce a:",c:["Firewall rule set","Remediation roadmap","User directory","Password vault"],a:1},
+  {q:"The remediation roadmap is often provided to stakeholders as:",c:["Log files","Reports","API tokens","Session IDs"],a:1},
+  {q:"Which is NOT a typical component of a security test report?",c:["Executive Summary","Methodology","Employee Salaries","Findings"],a:2},
+  {q:"The 'Executive Summary' in a security report is a:",c:["Detailed technical log","High-level overview for leadership","List of all vulnerabilities","Configuration file"],a:1},
+  {q:"'Scope and Objectives' in a report describes:",c:["Who audited the system","What was tested and why","The tools used","The remediation budget"],a:1},
+  {q:"'Methodology' in a report describes:",c:["The findings discovered","Who to notify","How the testing was conducted","The risk score"],a:2},
+  {q:"'Risk Analysis' in a report covers:",c:["Budget planning","Impact and likelihood assessment","Tool selection","Log retention"],a:1},
+  {q:"'Recommendations' in a report describes:",c:["How the test was conducted","How to fix the issues found","The scope of the test","The executive summary"],a:1},
+  {q:"'Timelines and Resources' in a report refers to:",c:["When the test started","Remediation schedule","Tool licensing costs","Log file size"],a:1},
+  {q:"An exception in security refers to:",c:["A permanent new policy","A control temporarily bypassed","A new firewall rule","A CVSS score above 9"],a:1},
+  {q:"Exceptions always carry:",c:["Reduced risk","No change in risk","Increased risk","Automated remediation"],a:2},
+  {q:"Documentation is especially important when handling:",c:["Session IDs","Exceptions","CVSS scores","TGTs"],a:1},
+  {q:"Ethical disclosure means:",c:["Hiding vulnerabilities permanently","Responsibly disclosing security incidents or vulnerabilities","Deleting logs after incidents","Disabling all user access"],a:1},
+  {q:"Many organizations do NOT have a:",c:["Firewall","SIEM","Disclosure policy","Vulnerability scanner"],a:2},
+  {q:"A Vulnerability Disclosure Policy template was created by:",c:["Cisco","IETF","DHS","OpenID Foundation"],a:2},
+  {q:"DHS stands for:",c:["Digital Home Security","Department of Homeland Security","Data Handling Standards","Distributed Host Services"],a:1},
+  // Penetration Testing
+  {q:"Penetration testing is often abbreviated as:",c:["PA testing","PT testing","Pen testing","PX testing"],a:2},
+  {q:"Black box penetration testing means the tester has:",c:["Full knowledge","Partial knowledge","Zero knowledge","Source code access"],a:2},
+  {q:"White box penetration testing means the tester has:",c:["Zero knowledge","Partial knowledge","Full knowledge including source code","Only network access"],a:2},
+  {q:"Gray box penetration testing means the tester has:",c:["Full knowledge","Zero knowledge","Partial knowledge","Only physical access"],a:2},
+  {q:"Which pentest type best simulates an external attacker?",c:["White box","Gray box","Purple box","Black box"],a:3},
+  {q:"Which pentest type is most thorough?",c:["Black box","Gray box","White box","Red team"],a:2},
+  {q:"Which pentest type simulates an insider threat?",c:["Black box","White box","Gray box","Blue team"],a:2},
+  // Red / Blue / Purple
+  {q:"The red team is the:",c:["Defensive team","Offensive team","Audit team","Support team"],a:1},
+  {q:"The blue team is the:",c:["Offensive team","Defensive team","Penalty team","Red team's backup"],a:1},
+  {q:"An Ethical Hacker / Pentester belongs to the:",c:["Blue team","Purple team","Red team","Audit team"],a:2},
+  {q:"A SOC Analyst belongs to the:",c:["Red team","Purple team","Blue team","Audit team"],a:2},
+  {q:"A Bug Bounty Hunter belongs to the:",c:["Blue team","Red team","Purple team","SOC"],a:1},
+  {q:"A Threat Hunter belongs to the:",c:["Red team","Blue team","Purple team","Audit team"],a:1},
+  {q:"A Digital Forensic Analyst belongs to the:",c:["Red team","Purple team","Blue team","SOC"],a:2},
+  {q:"An Incident Response Analyst belongs to the:",c:["Red team","Blue team","Purple team","Compliance team"],a:1},
+  {q:"A Vulnerability Management Analyst belongs to the:",c:["Red team","Purple team","Blue team","Audit team"],a:2},
+  {q:"Which tool is commonly used by the red team?",c:["Splunk","QRadar","Metasploit","OpenVAS"],a:2},
+  {q:"Which tool is commonly used by the red team?",c:["Sentinel","QRadar","Maltego","Kali Linux"],a:3},
+  {q:"Which tool is commonly used by the red team?",c:["Qualys","Nmap","Splunk","EDR"],a:1},
+  {q:"Which tool is a SIEM used by the blue team?",c:["Nmap","Metasploit","Splunk","Kali Linux"],a:2},
+  {q:"Which tool is a VA scanner used by the blue team?",c:["Nmap","Metasploit","Kali Linux","Qualys"],a:3},
+  {q:"Maltego is used by the blue team for:",c:["Vulnerability scanning","Exploitation","Digital forensics","Penetration testing"],a:2},
+  {q:"The purple team is best described as:",c:["Only offensive operations","Only defensive operations","A collaboration between red and blue teams","An external audit team"],a:2},
+  {q:"The purpose of the purple team is to:",c:["Replace the red team","Replace the blue team","Improve the effectiveness of both attack and defense","Conduct compliance audits"],a:2},
+  {q:"IPS stands for:",c:["Intrusion Prevention System","Identity Policy Service","Intrusion Protocol System","Infrastructure Protection Service"],a:0},
+  {q:"EDR stands for:",c:["Event Detection and Response","Endpoint Detection and Response","Enterprise Data Repository","Event Data Recovery"],a:1},
+];
+
+// ==================== QUIZ ENGINE ====================
+function buildState(rawData){
+  return shuffle(rawData).map((item,i)=>{
+    const opts = item.c.map((ch,idx)=>({ch,isCorrect:idx===item.a}));
+    const shuffled = shuffle(opts);
+    return {id:i+1,q:item.q,choices:shuffled,answer:shuffled.findIndex(o=>o.isCorrect),selected:null};
   });
 }
 
-function renderQuiz(){
-  clearTimeout(quizTimeout);
-  buildQuizState();
-  const list = document.getElementById('quizList');
-  const score = document.getElementById('quizScore');
-  const stats = document.getElementById('quizStats');
-  list.innerHTML = '';
-  score.classList.remove('show');
-  score.innerHTML = '';
-  stats.textContent = `${quizState.length} multiple-choice items. Answer first, then check your score.`;
-
-  quizState.forEach((item, idx) => {
+function renderQuizList(state, listId, prefix){
+  const list = document.getElementById(listId);
+  list.innerHTML='';
+  state.forEach((item,idx)=>{
     const card = document.createElement('div');
-    card.className = 'quiz-item';
-    card.dataset.index = String(idx);
-    const choices = item.choices.map((option, optIndex) => `
+    card.className='quiz-item';
+    card.dataset.index=idx;
+    const choices = item.choices.map((opt,optIdx)=>`
       <label class="quiz-choice">
-        <input type="radio" name="q-${idx}" value="${optIndex}">
-        <span>${String.fromCharCode(65 + optIndex)}. ${option.choice}</span>
-      </label>
-    `).join('');
-    card.innerHTML = `
-      <div class="quiz-q">${idx + 1}. ${item.q}</div>
-      <div class="quiz-choices">${choices}</div>
-      <div class="quiz-feedback" aria-live="polite"></div>
-    `;
+        <input type="radio" name="${prefix}-${idx}" value="${optIdx}">
+        <span>${String.fromCharCode(65+optIdx)}. ${opt.ch}</span>
+      </label>`).join('');
+    card.innerHTML=`<div class="quiz-q">${idx+1}. ${item.q}</div><div class="quiz-choices">${choices}</div><div class="quiz-feedback" aria-live="polite"></div>`;
     list.appendChild(card);
   });
 }
 
-function buildScenarioState(){
-  scenarioState = shuffle(scenarioData).map((item, index) => {
-    const options = item.choices.map((choice, idx) => ({ choice, isCorrect: idx === item.answer }));
-    const shuffledOptions = shuffle(options);
-    const answerIndex = shuffledOptions.findIndex(option => option.isCorrect);
-    return {
-      id: index + 1,
-      q: item.q,
-      choices: shuffledOptions,
-      answer: answerIndex,
-      selected: null,
-      revealed: false
-    };
-  });
-}
-
-function buildEnumState(){
-  enumState = shuffle(enumerationData).map((item, index) => ({
-    id: index + 1,
-    q: item.q,
-    answers: item.answers.map(answer => answer.toLowerCase()),
-    selected: '',
-    revealed: false
-  }));
-}
-
-function renderScenarioQuiz(){
-  clearTimeout(quizTimeout);
-  buildScenarioState();
-  const list = document.getElementById('scenarioList');
-  const score = document.getElementById('scenarioScore');
-  const stats = document.getElementById('scenarioStats');
-  list.innerHTML = '';
-  score.classList.remove('show');
-  score.innerHTML = '';
-  stats.textContent = `${scenarioState.length} scenario-based items. Choose the best answer.`;
-
-  scenarioState.forEach((item, idx) => {
-    const card = document.createElement('div');
-    card.className = 'quiz-item';
-    card.dataset.index = String(idx);
-    const choices = item.choices.map((option, optIndex) => `
-      <label class="quiz-choice">
-        <input type="radio" name="scenario-${idx}" value="${optIndex}">
-        <span>${String.fromCharCode(65 + optIndex)}. ${option.choice}</span>
-      </label>
-    `).join('');
-    card.innerHTML = `
-      <div class="quiz-q">${idx + 1}. ${item.q}</div>
-      <div class="quiz-choices">${choices}</div>
-      <div class="quiz-feedback" aria-live="polite"></div>
-    `;
-    list.appendChild(card);
-  });
-}
-
-function renderEnumQuiz(){
-  clearTimeout(quizTimeout);
-  buildEnumState();
-  const list = document.getElementById('enumList');
-  const score = document.getElementById('enumScore');
-  const stats = document.getElementById('enumStats');
-  list.innerHTML = '';
-  score.classList.remove('show');
-  score.innerHTML = '';
-  stats.textContent = `${enumState.length} enumeration items. Enter the answers in order, separated by commas.`;
-
-  enumState.forEach((item, idx) => {
-    const card = document.createElement('div');
-    card.className = 'quiz-item';
-    card.dataset.index = String(idx);
-    card.innerHTML = `
-      <div class="quiz-q">${idx + 1}. ${item.q}</div>
-      <div class="quiz-choices">
-        <label class="quiz-choice" style="cursor:text; align-items:stretch;">
-          <input type="text" data-enum-input="${idx}" placeholder="Type your answers here">
-          <span>Separate each answer with a comma. Order does not matter. Example: item 1, item 2, item 3</span>
-        </label>
-      </div>
-      <div class="quiz-feedback" aria-live="polite"></div>
-    `;
-    list.appendChild(card);
-  });
-}
-
-function gradeQuiz(){
-  const cards = [...document.querySelectorAll('.quiz-item')];
-  let correct = 0;
-  cards.forEach((card, idx) => {
-    const item = quizState[idx];
-    const selected = card.querySelector(`input[name="q-${idx}"]:checked`);
-    const selectedIndex = selected ? Number(selected.value) : null;
-    const choices = [...card.querySelectorAll('.quiz-choice')];
-    const feedback = card.querySelector('.quiz-feedback');
-
-    item.selected = selectedIndex;
-    item.revealed = true;
-    card.classList.remove('correct', 'wrong');
-
-    choices.forEach(choice => choice.classList.remove('correct', 'wrong'));
-
-    const correctChoice = choices[item.answer];
-    if (correctChoice) correctChoice.classList.add('correct');
-
-    if (selectedIndex === item.answer){
-      correct += 1;
+function gradeQuizList(state, listId, scoreId, statsId, prefix){
+  const cards = [...document.querySelectorAll(`#${listId} .quiz-item`)];
+  let correct=0;
+  cards.forEach((card,idx)=>{
+    const item=state[idx];
+    const sel=card.querySelector(`input[name="${prefix}-${idx}"]:checked`);
+    const selIdx=sel?Number(sel.value):null;
+    const choices=[...card.querySelectorAll('.quiz-choice')];
+    const fb=card.querySelector('.quiz-feedback');
+    choices.forEach(c=>c.classList.remove('correct','wrong'));
+    card.classList.remove('correct','wrong');
+    if(choices[item.answer]) choices[item.answer].classList.add('correct');
+    if(selIdx===item.answer){
+      correct++;
       card.classList.add('correct');
-      feedback.innerHTML = `<strong>Correct.</strong> ${item.choices[item.answer].choice}`;
+      fb.innerHTML=`<strong>Correct.</strong> ${item.choices[item.answer].ch}`;
     } else {
       card.classList.add('wrong');
-      if (selectedIndex !== null && choices[selectedIndex]) choices[selectedIndex].classList.add('wrong');
-      feedback.innerHTML = `<strong>Correct answer:</strong> ${String.fromCharCode(65 + item.answer)}. ${item.choices[item.answer].choice}`;
+      if(selIdx!==null && choices[selIdx]) choices[selIdx].classList.add('wrong');
+      fb.innerHTML=`<strong>Correct answer:</strong> ${String.fromCharCode(65+item.answer)}. ${item.choices[item.answer].ch}`;
     }
   });
-
-  const scoreBox = document.getElementById('quizScore');
-  const stats = document.getElementById('quizStats');
-  const percent = Math.round((correct / quizState.length) * 100);
+  const pct=Math.round((correct/state.length)*100);
+  const scoreBox=document.getElementById(scoreId);
   scoreBox.classList.add('show');
-  scoreBox.innerHTML = `Score: ${correct}/${quizState.length} (${percent}%)<div class="quiz-note">Answers are revealed. You can review them anytime until you press Shuffle Quiz.</div>`;
-  stats.textContent = `Last score: ${correct}/${quizState.length} (${percent}%).`;
+  scoreBox.innerHTML=`Score: ${correct}/${state.length} (${pct}%)<div class="quiz-note">Answers revealed. Press Shuffle to reset.</div>`;
+  document.getElementById(statsId).textContent=`Last score: ${correct}/${state.length} (${pct}%).`;
 }
 
-function gradeScenarioQuiz(){
-  const cards = [...document.querySelectorAll('#scenarioList .quiz-item')];
-  let correct = 0;
-  cards.forEach((card, idx) => {
-    const item = scenarioState[idx];
-    const selected = card.querySelector(`input[name="scenario-${idx}"]:checked`);
-    const selectedIndex = selected ? Number(selected.value) : null;
-    const choices = [...card.querySelectorAll('.quiz-choice')];
-    const feedback = card.querySelector('.quiz-feedback');
+let state6=[], state7=[];
 
-    item.selected = selectedIndex;
-    item.revealed = true;
-    card.classList.remove('correct', 'wrong');
-    choices.forEach(choice => choice.classList.remove('correct', 'wrong'));
-
-    const correctChoice = choices[item.answer];
-    if (correctChoice) correctChoice.classList.add('correct');
-
-    if (selectedIndex === item.answer){
-      correct += 1;
-      card.classList.add('correct');
-      feedback.innerHTML = `<strong>Correct.</strong> ${item.choices[item.answer].choice}`;
-    } else {
-      card.classList.add('wrong');
-      if (selectedIndex !== null && choices[selectedIndex]) choices[selectedIndex].classList.add('wrong');
-      feedback.innerHTML = `<strong>Correct answer:</strong> ${String.fromCharCode(65 + item.answer)}. ${item.choices[item.answer].choice}`;
-    }
-  });
-
-  const scoreBox = document.getElementById('scenarioScore');
-  const stats = document.getElementById('scenarioStats');
-  const percent = Math.round((correct / scenarioState.length) * 100);
-  scoreBox.classList.add('show');
-  scoreBox.innerHTML = `Score: ${correct}/${scenarioState.length} (${percent}%)<div class="quiz-note">Scenario answers are revealed. Use the situations to practice application, not just memorization.</div>`;
-  stats.textContent = `Last score: ${correct}/${scenarioState.length} (${percent}%).`;
+function initQ6(){
+  state6=buildState(raw6);
+  renderQuizList(state6,'q6List','q6');
+  document.getElementById('q6Score').classList.remove('show');
+  document.getElementById('q6Stats').textContent='100 items based on Module 6 slides.';
+}
+function initQ7(){
+  state7=buildState(raw7);
+  renderQuizList(state7,'q7List','q7');
+  document.getElementById('q7Score').classList.remove('show');
+  document.getElementById('q7Stats').textContent='100 items based on Module 7 slides.';
 }
 
-function gradeEnumQuiz(){
-  const cards = [...document.querySelectorAll('#enumList .quiz-item')];
-  let totalScore = 0;
-  cards.forEach((card, idx) => {
-    const item = enumState[idx];
-    const input = card.querySelector(`[data-enum-input="${idx}"]`);
-    const feedback = card.querySelector('.quiz-feedback');
-    const value = (input?.value || '').toLowerCase().trim();
-    const selectedAnswers = [...new Set(value.split(',').map(v => v.trim()).filter(Boolean))];
-    const correctAnswers = new Set(item.answers);
-    const matchedAnswers = selectedAnswers.filter(answer => correctAnswers.has(answer));
-    const itemScore = matchedAnswers.length;
+document.getElementById('checkQ6Btn').addEventListener('click',()=>gradeQuizList(state6,'q6List','q6Score','q6Stats','q6'));
+document.getElementById('shuffleQ6Btn').addEventListener('click',initQ6);
+document.getElementById('checkQ7Btn').addEventListener('click',()=>gradeQuizList(state7,'q7List','q7Score','q7Stats','q7'));
+document.getElementById('shuffleQ7Btn').addEventListener('click',initQ7);
 
-    item.selected = value;
-    item.revealed = true;
-    card.classList.remove('correct', 'wrong');
-    input.disabled = true;
-
-    totalScore += itemScore;
-
-    if (itemScore === item.answers.length && selectedAnswers.length === item.answers.length){
-      card.classList.add('correct');
-      feedback.innerHTML = `<strong>Correct.</strong> ${item.answers.map(a => a.replace(/\b\w/g, c => c.toUpperCase())).join(', ')}`;
-    } else {
-      card.classList.add('wrong');
-      feedback.innerHTML = `<strong>Score for this item:</strong> ${itemScore}/${item.answers.length}<br><strong>Correct answer:</strong> ${item.answers.map(a => a.replace(/\b\w/g, c => c.toUpperCase())).join(', ')}`;
-    }
-  });
-
-  const scoreBox = document.getElementById('enumScore');
-  const stats = document.getElementById('enumStats');
-  const totalPossible = enumState.reduce((sum, item) => sum + item.answers.length, 0);
-  const percent = Math.round((totalScore / totalPossible) * 100);
-  scoreBox.classList.add('show');
-  scoreBox.innerHTML = `Score: ${totalScore}/${totalPossible} (${percent}%)<div class="quiz-note">Enumeration answers are matched case-insensitively, order does not matter, and partial credit is counted.</div>`;
-  stats.textContent = `Last score: ${totalScore}/${totalPossible} (${percent}%).`;
-}
-
-document.getElementById('checkQuizBtn').addEventListener('click', gradeQuiz);
-document.getElementById('shuffleQuizBtn').addEventListener('click', renderQuiz);
-document.getElementById('checkScenarioBtn').addEventListener('click', gradeScenarioQuiz);
-document.getElementById('shuffleScenarioBtn').addEventListener('click', renderScenarioQuiz);
-document.getElementById('checkEnumBtn').addEventListener('click', gradeEnumQuiz);
-document.getElementById('shuffleEnumBtn').addEventListener('click', renderEnumQuiz);
-
+// ==================== THEME ====================
 (function(){
-  const root = document.documentElement;
-  const toggle = document.getElementById('themeToggle');
-  const saved = localStorage.getItem('reviewer-theme');
-  const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const initialTheme = saved || (systemDark ? 'dark' : 'light');
-
-  function applyTheme(theme){
-    root.setAttribute('data-theme', theme);
-    toggle.textContent = theme === 'dark' ? 'Light mode' : 'Dark mode';
-    toggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-    localStorage.setItem('reviewer-theme', theme);
+  const root=document.documentElement;
+  const toggle=document.getElementById('themeToggle');
+  const saved=localStorage.getItem('reviewer-theme');
+  const sysDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;
+  const init=saved||(sysDark?'dark':'light');
+  function applyTheme(t){
+    root.setAttribute('data-theme',t);
+    toggle.textContent=t==='dark'?'Light mode':'Dark mode';
+    localStorage.setItem('reviewer-theme',t);
   }
-
-  applyTheme(initialTheme);
-
-  toggle.addEventListener('click', function(){
-    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-  });
+  applyTheme(init);
+  toggle.addEventListener('click',()=>applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark'));
 })();
 
-renderQuiz();
-renderScenarioQuiz();
-renderEnumQuiz();
+initQ6();
+initQ7();
 </script>
+</body>
+</html>
