@@ -89,7 +89,7 @@ body{font-family:"Segoe UI",Inter,system-ui,-apple-system,BlinkMacSystemFont,"He
 .quiz-btn:focus-visible{outline:2px solid var(--info-text);outline-offset:2px}
 .quiz-btn.primary{background:var(--info-bg);color:var(--info-text)}
 .quiz-score{margin-bottom:1rem;padding:1rem 1.1rem;border-radius:var(--border-radius-md);border:1px solid var(--border);background:var(--card-bg-soft);color:var(--text-primary);font-weight:700;font-size:clamp(16px,.6vw + 12px,19px);display:none}
-.quiz-score.show{display:block}
+.quiz-score.show{display:block;}
 .quiz-note{margin-top:.35rem;font-size:clamp(16px,.6vw + 12px,19px);font-weight:600;color:var(--text-secondary)}
 .quiz-list{display:grid;gap:.9rem}
 .quiz-item{border:1px solid var(--border);border-radius:var(--border-radius-lg);background:var(--card-bg);padding:1rem}
@@ -1088,7 +1088,7 @@ function renderEnumQuiz(){
 }
 
 function gradeQuiz(){
-  const cards = [...document.querySelectorAll('.quiz-item')];
+  const cards = [...document.querySelectorAll('#quizList .quiz-item')];
   let correct = 0;
   cards.forEach((card, idx) => {
     const item = quizState[idx];
